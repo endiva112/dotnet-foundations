@@ -43,3 +43,57 @@ Console.WriteLine(greeting + " " + firstName + "!");
 
 //Interpolación de cadenas
 string message = $"{greeting} {firstName}!";
+
+//Combinar literales textuales y interpolación de cadenas
+//En este ejemplo, el $ símbolo permite hacer referencia a la projectName variable dentro de las llaves, mientras que el @ símbolo permite usar el carácter sin \ escape.
+string projectName = "First-Project";
+Console.WriteLine($@"C:\Output\{projectName}\Data");
+
+
+/* Cual de estos 3 no da error de compilacion?
+
+directory = directory + "\"; -> esto es una cadena de texto, por lo que necesitaria ser \\ para que no falle
+directory = directory + '\'; -> esto es un caracter, por lo que no se puede concatenar con una cadena de texto
+directory = directory + @"\"; -> para eso sirve el @, para que no se interprete como un caracter de escape, sino como una cadena de texto
+*/
+
+
+
+//NUMEROS
+int sum = 7 + 5;
+int difference = 7 - 5;
+int product = 7 * 5;
+int quotient = 7 / 5;
+
+Console.WriteLine("Sum: " + sum);
+Console.WriteLine("Difference: " + difference);
+Console.WriteLine("Product: " + product);
+Console.WriteLine("Quotient: " + quotient);
+//Cuando se dividen dos enteros, el resultado es un entero. Si se desea obtener un resultado decimal, al menos uno de los operandos debe ser un número decimal.
+//Los numeros tienden a truncarse, es decir, si se hace una division de 7/5, el resultado es 1, ya que el resultado es un entero, y no un decimal. 
+// Para obtener un resultado decimal, al menos uno de los operandos debe ser un número decimal.
+decimal decimalQuotient = 7.0m / 5;
+Console.WriteLine($"Decimal quotient: {decimalQuotient}");
+
+
+// recuerda el orden: f flotante, d double, m decimal, l long, u unsigned, etc.
+
+//Modulo
+Console.WriteLine($"Modulus of 200 / 5 : {200 % 5}");
+
+//C# sigue el mismo orden que PEMDAS, excepto en el caso de los exponentes. 
+// Aunque no hay ningún operador exponencial en C#, puede usar el método System.Math.Pow. 
+// En el módulo "Llamada a métodos de la biblioteca de clases .NET mediante C#" se presenta este método y otros.
+// PEMDAS = Paréntesis, Exponentes, Multiplicación y División (de izquierda a derecha), Adición y Sustracción (de izquierda a derecha)
+
+//Operadores de incremento y decremento
+int x = 5;
+x++; // Incrementa x en 1
+Console.WriteLine($"Incremented x: {x}"); // Muestra 6
+x--; // Decrementa x en 1
+Console.WriteLine($"Decremented x: {x}"); // Muestra 5
+
+
+//Si se desea escribir el operador de incremento o decremento en la misma línea que otra operación, es recomendable usar paréntesis para mejorar la 
+// legibilidad y evitar confusiones. Se debe priorizar la legibilidad del código sobre la brevedad. Se escribe 1 vez pero se lee muchas veces.
+
