@@ -97,3 +97,39 @@ Console.WriteLine($"Decremented x: {x}"); // Muestra 5
 //Si se desea escribir el operador de incremento o decremento en la misma línea que otra operación, es recomendable usar paréntesis para mejorar la 
 // legibilidad y evitar confusiones. Se debe priorizar la legibilidad del código sobre la brevedad. Se escribe 1 vez pero se lee muchas veces.
 
+//Random
+Random dice = new Random();
+int roll = dice.Next(1, 7);
+Console.WriteLine(roll);
+
+//el 7 no esta incluido, pero el 1 si.
+
+
+//Metodos
+//Hay 2 tipos. Estaticos y de instancia. Los metodos estaticos se llaman desde la clase, mientras que los metodos de instancia se llaman desde una instancia de la clase.
+//En C# una variable de la clase se conoce como un campo, mientras que una variable de una instancia de la clase se conoce como una propiedad.
+
+//Crear instancia de una clase
+Random dice = new Random(); //se requiere usar el operador "new". new reserva espacio en memoria, crea el objeto y lo almacena en dicha memoria
+// Y devuele la posicion de memoria donde se encuentra el objeto. En este caso, la variable dice almacena la posicion de memoria donde se encuentra el objeto Random.
+
+//Tambien se puede declarar de la siguiente manera:
+Random dice = new();
+
+//simplifica la legibilidad del código
+
+//A menudo, los términos 'parameter' y 'argument' se usan indistintamente. Sin embargo, "parámetro" hace 
+//referencia a la variable que se usa dentro del método. El "argumento" es el valor que se pasa cuando se llama al método.
+
+//Métodos sobrecargados
+dice.Next(); //devuelve un numero aleatorio entre 0 y el maximo valor de un entero
+
+
+int firstValue = 500;
+int secondValue = 600;
+
+System.Math.Greater(firstValue, secondValue); //devuelve el valor mayor entre los 2 valores
+
+int largerValue;
+
+Console.WriteLine(largerValue);
