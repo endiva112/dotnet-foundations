@@ -127,9 +127,36 @@ dice.Next(); //devuelve un numero aleatorio entre 0 y el maximo valor de un ente
 
 int firstValue = 500;
 int secondValue = 600;
-
-System.Math.Greater(firstValue, secondValue); //devuelve el valor mayor entre los 2 valores
-
 int largerValue;
 
+largerValue = System.Math.Max(firstValue, secondValue); //devuelve el valor mayor entre los 2 valores
+
 Console.WriteLine(largerValue);
+
+
+
+//Logica de control
+/*
+if, else y else if
+if (message.Contains("fox"))
+{
+    Console.WriteLine("What does the fox say?");
+}
+*/
+
+//Operadores de comparación
+/*
+==, el operador "igual que" para probar la igualdad
+>, el operador "mayor que" para probar si el valor a la izquierda es mayor que el valor a la derecha
+<, el operador "menor que" para probar si el valor a la izquierda es menor que el valor a la derecha
+>=, el operador "mayor o igual que"
+<=, el operador "menor o igual que"
+*/
+
+//Operadores lógicos
+// &&, el operador "y" para probar si ambas condiciones son verdaderas
+// ||, el operador "o" para probar si al menos una de las condiciones es verdadera
+
+
+//Matrices
+//Una matriz es una colección de elementos del MISMO tipo.

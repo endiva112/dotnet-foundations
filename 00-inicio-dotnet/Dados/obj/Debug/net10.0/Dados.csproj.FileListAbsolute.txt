@@ -1,0 +1,15 @@
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\Dados\bin\Debug\net10.0\Dados.exe
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\Dados\bin\Debug\net10.0\Dados.deps.json
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\Dados\bin\Debug\net10.0\Dados.runtimeconfig.json
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\Dados\bin\Debug\net10.0\Dados.dll
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\Dados\bin\Debug\net10.0\Dados.pdb
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\Dados\obj\Debug\net10.0\Dados.GeneratedMSBuildEditorConfig.editorconfig
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\Dados\obj\Debug\net10.0\Dados.AssemblyInfoInputs.cache
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\Dados\obj\Debug\net10.0\Dados.AssemblyInfo.cs
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\Dados\obj\Debug\net10.0\Dados.csproj.CoreCompileInputs.cache
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\Dados\obj\Debug\net10.0\Dados.sourcelink.json
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\Dados\obj\Debug\net10.0\Dados.dll
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\Dados\obj\Debug\net10.0\refint\Dados.dll
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\Dados\obj\Debug\net10.0\Dados.pdb
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\Dados\obj\Debug\net10.0\Dados.genruntimeconfig.cache
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\Dados\obj\Debug\net10.0\ref\Dados.dll
