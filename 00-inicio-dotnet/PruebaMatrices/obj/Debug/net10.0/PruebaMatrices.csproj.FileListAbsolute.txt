@@ -1,0 +1,15 @@
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\PruebaMatrices\bin\Debug\net10.0\PruebaMatrices.exe
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\PruebaMatrices\bin\Debug\net10.0\PruebaMatrices.deps.json
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\PruebaMatrices\bin\Debug\net10.0\PruebaMatrices.runtimeconfig.json
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\PruebaMatrices\bin\Debug\net10.0\PruebaMatrices.dll
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\PruebaMatrices\bin\Debug\net10.0\PruebaMatrices.pdb
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\PruebaMatrices\obj\Debug\net10.0\PruebaMatrices.GeneratedMSBuildEditorConfig.editorconfig
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\PruebaMatrices\obj\Debug\net10.0\PruebaMatrices.AssemblyInfoInputs.cache
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\PruebaMatrices\obj\Debug\net10.0\PruebaMatrices.AssemblyInfo.cs
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\PruebaMatrices\obj\Debug\net10.0\PruebaMatrices.csproj.CoreCompileInputs.cache
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\PruebaMatrices\obj\Debug\net10.0\PruebaMatrices.sourcelink.json
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\PruebaMatrices\obj\Debug\net10.0\PruebaMatrices.dll
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\PruebaMatrices\obj\Debug\net10.0\refint\PruebaMatrices.dll
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\PruebaMatrices\obj\Debug\net10.0\PruebaMatrices.pdb
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\PruebaMatrices\obj\Debug\net10.0\PruebaMatrices.genruntimeconfig.cache
+e:\repositoriosGit\Proyectos dotnet\dotnet-foundations\00-inicio-dotnet\PruebaMatrices\obj\Debug\net10.0\ref\PruebaMatrices.dll

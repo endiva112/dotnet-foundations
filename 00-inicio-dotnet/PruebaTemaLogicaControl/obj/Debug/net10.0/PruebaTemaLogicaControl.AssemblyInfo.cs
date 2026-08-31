@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PruebaTemaLogicaControl")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1cc033b8e37051edd2b672371c4b157f04c9936a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d6ad66760a18bb348e5c8e57c2359e3cd43f990f")]
 [assembly: System.Reflection.AssemblyProductAttribute("PruebaTemaLogicaControl")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PruebaTemaLogicaControl")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

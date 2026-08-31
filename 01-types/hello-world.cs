@@ -158,5 +158,23 @@ if (message.Contains("fox"))
 // ||, el operador "o" para probar si al menos una de las condiciones es verdadera
 
 
-//Matrices
+//Matrices aka arrays
 //Una matriz es una colección de elementos del MISMO tipo.
+//Ejemplo declaracion de matriz:
+string[] fraudulentOrderIDs = new string[3];
+//string[] fraudulentOrderIDs = [ "A123", "B456", "C789" ];
+//o
+/*
+fraudulentOrderIDs[0] = "A123";
+fraudulentOrderIDs[1] = "B456";
+fraudulentOrderIDs[2] = "C789";
+*/
+
+//foreach
+/*
+string[] names = { "Rowena", "Robin", "Bao" };
+foreach (string name in names)
+{
+    Console.WriteLine(name);
+}
+*/

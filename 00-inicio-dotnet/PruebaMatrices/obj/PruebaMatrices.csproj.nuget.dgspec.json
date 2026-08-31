@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\00-inicio-dotnet\\Matrices\\Matrices.csproj": {}
+    "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\00-inicio-dotnet\\PruebaMatrices\\PruebaMatrices.csproj": {}
   },
   "projects": {
-    "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\00-inicio-dotnet\\Matrices\\Matrices.csproj": {
+    "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\00-inicio-dotnet\\PruebaMatrices\\PruebaMatrices.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\00-inicio-dotnet\\Matrices\\Matrices.csproj",
-        "projectName": "Matrices",
-        "projectPath": "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\00-inicio-dotnet\\Matrices\\Matrices.csproj",
+        "projectUniqueName": "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\00-inicio-dotnet\\PruebaMatrices\\PruebaMatrices.csproj",
+        "projectName": "PruebaMatrices",
+        "projectPath": "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\00-inicio-dotnet\\PruebaMatrices\\PruebaMatrices.csproj",
         "packagesPath": "C:\\Users\\Trabajo\\.nuget\\packages\\",
-        "outputPath": "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\00-inicio-dotnet\\Matrices\\obj\\",
+        "outputPath": "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\00-inicio-dotnet\\PruebaMatrices\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Trabajo\\AppData\\Roaming\\NuGet\\NuGet.Config"
