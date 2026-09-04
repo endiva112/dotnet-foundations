@@ -2,6 +2,16 @@
 
 Antes de tocar C#, esto es lo mínimo que hace falta tener controlado.
 
+## Qué es .NET, C# y ASP.NET Core
+
+- **C#** es el lenguaje: de alto nivel, tipado estático, creado por Microsoft.
+- **.NET** es la plataforma/runtime que compila y ejecuta ese código. Es de código abierto y multiplataforma (Windows, macOS, Linux) — no es "cosa de Windows" como mucha gente asume por su origen.
+- **ASP.NET Core** es un framework construido encima de .NET, específico para crear aplicaciones web y APIs. No es un lenguaje aparte, es una capa más sobre lo mismo.
+
+A diferencia de JavaScript, que el navegador puede interpretar y ejecutar directamente, C# es un lenguaje compilado: el código se traduce a un formato intermedio antes de poder ejecutarse. Por eso hace falta tener instalado el **SDK de .NET** en la máquina — sin él no hay forma de compilar ni de correr nada.
+
+(Dato rápido para más adelante: el SDK incluye el *runtime* además de las herramientas de compilación. Si algún día solo necesitas *ejecutar* una app ya compilada, sin desarrollar, existe un runtime más ligero sin el SDK completo — pero para desarrollo, el SDK es lo que hace falta.)
+
 ## Git
 
 Comandos que se usan el 90% del tiempo:
