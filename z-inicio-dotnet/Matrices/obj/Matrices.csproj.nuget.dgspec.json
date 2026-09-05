@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Matrices\\Matrices.csproj": {}
+    "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Matrices\\Matrices.csproj": {}
   },
   "projects": {
-    "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Matrices\\Matrices.csproj": {
+    "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Matrices\\Matrices.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Matrices\\Matrices.csproj",
+        "projectUniqueName": "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Matrices\\Matrices.csproj",
         "projectName": "Matrices",
-        "projectPath": "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Matrices\\Matrices.csproj",
+        "projectPath": "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Matrices\\Matrices.csproj",
         "packagesPath": "C:\\Users\\Trabajo\\.nuget\\packages\\",
-        "outputPath": "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Matrices\\obj\\",
+        "outputPath": "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Matrices\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Trabajo\\AppData\\Roaming\\NuGet\\NuGet.Config"

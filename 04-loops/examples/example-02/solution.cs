@@ -1,6 +1,7 @@
+Console.Write("1. Saludar! \n 2. Mostrar fecha \n 3. Salir");
 
-
-
+// Cambiar este valor para simular distintas elecciones
+int opcionSimulada = 1;
 
 /*
 
@@ -10,7 +11,8 @@
 3. Salir
 ```
 
-Como todavía no se ha visto lectura de entrada de teclado (eso se ve en el tema de librerías/métodos nativos), simula la elección del usuario con una variable que cambies a mano entre ejecuciones, por ejemplo:
+Como todavía no se ha visto lectura de entrada de teclado (eso se ve en el tema de librerías/métodos nativos), simula la elección del usuario con una variable 
+que cambies a mano entre ejecuciones, por ejemplo:
 
 ```csharp
 int opcionSimulada = 1; // cambia este valor para simular distintas elecciones

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Dados\\Dados.csproj": {}
+    "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Dados\\Dados.csproj": {}
   },
   "projects": {
-    "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Dados\\Dados.csproj": {
+    "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Dados\\Dados.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Dados\\Dados.csproj",
+        "projectUniqueName": "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Dados\\Dados.csproj",
         "projectName": "Dados",
-        "projectPath": "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Dados\\Dados.csproj",
+        "projectPath": "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Dados\\Dados.csproj",
         "packagesPath": "C:\\Users\\Trabajo\\.nuget\\packages\\",
-        "outputPath": "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Dados\\obj\\",
+        "outputPath": "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\Dados\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Trabajo\\AppData\\Roaming\\NuGet\\NuGet.Config"

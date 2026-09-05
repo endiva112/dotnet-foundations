@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\TestProject\\TestProject.csproj": {}
+    "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\TestProject\\TestProject.csproj": {}
   },
   "projects": {
-    "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\TestProject\\TestProject.csproj": {
+    "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\TestProject\\TestProject.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\TestProject\\TestProject.csproj",
+        "projectUniqueName": "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\TestProject\\TestProject.csproj",
         "projectName": "TestProject",
-        "projectPath": "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\TestProject\\TestProject.csproj",
+        "projectPath": "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\TestProject\\TestProject.csproj",
         "packagesPath": "C:\\Users\\Trabajo\\.nuget\\packages\\",
-        "outputPath": "e:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\TestProject\\obj\\",
+        "outputPath": "E:\\repositoriosGit\\Proyectos dotnet\\dotnet-foundations\\z-inicio-dotnet\\TestProject\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Trabajo\\AppData\\Roaming\\NuGet\\NuGet.Config"
