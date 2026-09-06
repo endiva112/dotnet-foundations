@@ -46,11 +46,31 @@ else
 
 ## Operador ternario
 
-Forma corta de un `if/else` que devuelve un valor:
+Forma corta de un `if/else` que, a diferencia de `if/else`, es una **expresión**: no ejecuta una acción, produce un valor que se puede asignar, pasar como argumento o interpolar directamente.
 
 ```csharp
 string estado = (edad < 18) ? "menor" : "adulto";
 ```
+
+Se lee como: *condición* `?` *valor si es verdadera* `:` *valor si es falsa*.
+
+Es equivalente a:
+
+```csharp
+string estado;
+if (edad < 18)
+{
+    estado = "menor";
+}
+else
+{
+    estado = "adulto";
+}
+```
+
+Ambos lados del `?:` deben producir un valor del mismo tipo (o de tipos compatibles entre sí) — no se puede devolver un `string` en un lado y un `int` en el otro.
+
+Se puede anidar (`condicion1 ? valor1 : condicion2 ? valor2 : valor3`), pero se vuelve difícil de leer muy rápido. Como norma práctica: si hace falta más de un nivel, mejor usar `if/else if/else` normal.
 
 ## switch clásico
 
