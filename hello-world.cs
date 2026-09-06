@@ -178,3 +178,5 @@ foreach (string name in names)
     Console.WriteLine(name);
 }
 */
+
+//AQUI tampoco se ha creado temario para 01b-nullable-reference-types, se debe cuestionar
