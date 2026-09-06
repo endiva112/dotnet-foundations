@@ -25,6 +25,38 @@ Todos devuelven un `bool`.
 
 `&&` y `||` tienen cortocircuito: si con el primer operando ya se sabe el resultado, el segundo ni se evalúa. Ejemplo: en `false && ObtenerDatos()`, `ObtenerDatos()` nunca se llega a ejecutar.
 
+## Ámbito de las variables (scope)
+
+Antes de ver los tipos de estructuras de control, debemos comprender un concepto importante, el **scope**, o ámbito de variable.
+Toda variable declarada dentro de un bloque (`{ }`) — un `if`, un bucle, un `switch`... — deja de existir al cerrarse esa llave. Esto no es exclusivo de C#, pero conviene mencionarlo para evitar posibles dudas y errores de compilación:
+
+```csharp
+if (edad < 18)
+{
+    string mensaje = "Menor de edad";
+    Console.WriteLine(mensaje);
+}
+
+Console.WriteLine(mensaje); // error: "mensaje" no existe aquí, murió al cerrar el if
+```
+
+Si el valor hace falta fuera del bloque, la variable ha de ser declarada fuera de dicho bloque, aunque el valor se le de dentro:
+
+```csharp
+string mensaje;
+
+if (edad < 18)
+{
+    mensaje = "Menor de edad";
+}
+else
+{
+    mensaje = "Adulto";
+}
+
+Console.WriteLine(mensaje); // aquí sí existe
+```
+
 ## if / else if / else
 
 ```csharp
