@@ -118,7 +118,8 @@ switch (diaSemana)
     case 2:
         nombreDia = "Martes";
         break;
-    case 3:
+    case 3: //Esto es un ejemplo de valores emparejados, el resultado será miércoles sin importar si el valor es 3 o 4.
+    case 4:
         nombreDia = "Miércoles";
         break;
     default:
