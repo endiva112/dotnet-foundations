@@ -7,14 +7,16 @@ for (int i = 0; i < temperaturas.Length; i++)
     if (temperaturas[i] < 10)
     {
         sensacionTermica = "Frío";
-    } else if (temperaturas[i] < 25)
+    }
+    else if (temperaturas[i] < 25)
     {
         sensacionTermica = "Templado";
-    } else
+    }
+    else
     {
         sensacionTermica = "Caluroso";
         diasCalurosos++;
     }
-    Console.WriteLine($"Día {i}: {temperaturas[i]}º - {sensacionTermica}");
+    Console.WriteLine($"Día {i}: {temperaturas[i]}° - {sensacionTermica}");
 }
 Console.WriteLine($"Número de días calurosos: {diasCalurosos}");
