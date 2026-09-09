@@ -77,7 +77,7 @@ Saludar("Ana", 30);
 
 Por defecto, los parámetros se pasan **por valor**: el método recibe una copia del valor.
 
-Si el parámetro es un tipo por referencia (como una lista), la copia corresponde a la referencia, por lo que modificar el contenido del objeto sí se nota fuera del método. Sin embargo, reasignar el parámetro a otro objeto distinto no cambia la variable original.
+Si el parámetro es un tipo por referencia (como un array, tema 05), la copia corresponde a la referencia, por lo que modificar el contenido del objeto sí se nota fuera del método. Sin embargo, reasignar el parámetro a otro objeto distinto no cambia la variable original.
 
 También se pueden pasar parámetros por nombre, en cualquier orden:
 
