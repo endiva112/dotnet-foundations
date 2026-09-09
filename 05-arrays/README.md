@@ -25,6 +25,21 @@ Con `new int[5]` se reserva espacio para 5 elementos, pero no se indica su conte
 
 Un array no puede crecer ni encoger una vez creado. Si necesitas añadir o quitar elementos dinámicamente, un array no es la herramienta — para eso existe `List<T>`, que se ve en el tema de colecciones. De momento, si el número de elementos es fijo y conocido, el array es la opción correcta y más ligera.
 
+## El array en sí es un tipo por referencia
+
+En el tema 01 vimos que `string` vive en el heap y los tipos numéricos en la pila, copiándose al asignarlos. Un array sigue la misma regla que `string`: aunque sus elementos sean `int`, el array en sí es un objeto que vive en el heap, y lo que se copia al asignarlo o pasarlo es la referencia, no el contenido.
+
+```csharp
+int[] original = { 1, 2, 3 };
+int[] copia = original;
+
+copia[0] = 99;
+
+Console.WriteLine(original[0]); // 99 — misma referencia, mismo array
+```
+
+Conviene tenerlo asentado desde ya: más adelante, en el tema de métodos, esto explica por qué modificar el contenido de un array dentro de un método sí se nota fuera de él.
+
 ## Indexado
 
 Igual que en un `string` (tema 03), cada posición se accede por índice, empezando en `0`.
@@ -38,7 +53,7 @@ Console.WriteLine(numeros[2]); // 30
 numeros[1] = 99; // se puede modificar un elemento por índice
 ```
 
-Acceder a un índice que no existe (por ejemplo `numeros[10]` en un array de 3 elementos) compila sin problema, pero falla en tiempo de ejecución. El porqué exacto y cómo manejarlo se ve en el tema de excepciones — de momento basta con saber que hay que tener cuidado con los límites del array.
+Acceder a un índice que no existe (por ejemplo `numeros[10]` en un array de 3 elementos) compila sin problema, pero lanza una `IndexOutOfRangeException` en tiempo de ejecución. El manejo de excepciones se ve en su propio tema más adelante — de momento basta con saber que hay que tener cuidado con los límites del array y que la excepción tiene ese nombre.
 
 ## Length
 
@@ -68,6 +83,17 @@ foreach (int numero in numeros)
     Console.WriteLine(numero);
 }
 ```
+
+La variable de un `foreach` es de solo lectura: no se puede reasignar dentro del bucle, aunque el array contenga tipos por valor.
+
+```csharp
+foreach (int numero in numeros)
+{
+    numero = 0; // error de compilación (CS1656)
+}
+```
+
+Si hace falta modificar elementos durante el recorrido, hay que usar `for` con el índice.
 
 ## Arrays multidimensionales
 
