@@ -55,6 +55,18 @@ Todo en consola. El objetivo es pensar en C# sin depender de un framework encima
 `List<Agent>` con estado, algo de LINQ para filtrar, serializado a JSON, con 3-4 tests
 xUnit) — esto ya demuestra que dominas el lenguaje base.
 
+- bcl (cerrado)
+- enums
+- classes
+- metodos2
+- structs
+- herencia-y-polimorfismo   ← nuevo, aprovechando el contraste con structs
+- records
+- interfaces                ← contraste "extender" vs "implementar", + nota de null object
+- generics
+- colecciones
+- stringbuilder   
+
 ---
 
 ## Fase 1 — Bases de datos y ASP.NET Core Basics
