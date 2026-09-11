@@ -22,7 +22,7 @@ Console.WriteLine(Math.PI);           // 3.14159265358979
 
 ## Random
 
-A diferencia de `Math`, `Random` no es static — hace falta crear una instancia antes de usarla, igual que ya hicisteis con `new int[5]` en el tema de arrays:
+A diferencia de `Math`, `Random` no es static — hace falta crear una instancia antes de usarla, igual que ya se hizo con `new int[5]` en el tema de arrays:
 
 ```csharp
 Random aleatorio = new Random();
@@ -85,7 +85,7 @@ int posicion = Array.IndexOf(numeros, 5); // posición donde está el 5, o -1 si
 Array.Clear(numeros); // pone todo el array a los valores por defecto del tipo (0 para int)
 ```
 
-`Sort` y `Reverse` modifican el array original, no devuelven uno nuevo — es el mismo array, reordenado en el mismo espacio de memoria.
+`Sort` y `Reverse` modifican el array original, no devuelven uno nuevo — es el mismo array, reordenado en el mismo espacio de memoria. `Clear` funciona igual: no crea nada nuevo, sobrescribe cada posición del array recibido con el valor por defecto de su tipo.
 
 ### Copiar un array de verdad
 
@@ -111,6 +111,8 @@ Array.Copy(original, copia, original.Length);
 copia[0] = 99;
 Console.WriteLine(original[0]); // 1 — independiente de copia
 ```
+
+El tercer argumento (`original.Length`) indica cuántos elementos copiar. Hace falta porque `Array.Copy` no asume que origen y destino tengan el mismo tamaño — podría copiarse solo una parte de `original` a un array más pequeño, o llenar solo una parte de uno más grande. Al indicar explícitamente cuántos elementos, el método no tiene que adivinarlo.
 
 También existe `original.Clone()`, que hace algo parecido, pero tiene más matiz del que aparenta (es una copia "superficial", relevante sobre todo cuando el array contiene objetos en vez de tipos por valor) — se retoma más adelante, cuando haya objetos de por medio y el matiz tenga sentido real. De momento, `Array.Copy` cubre lo que hace falta.
 
@@ -138,7 +140,7 @@ int numero = int.Parse(entrada!); // ! porque asumimos que sí hay contenido; si
 double decimal_ = double.Parse("19.99");
 ```
 
-`int.Parse` / `double.Parse` son la forma estándar para esto. Existe también una alternativa más segura, `TryParse`, que evita la excepción — se deja para Métodos II, porque su forma de uso necesita `out`, que todavía no habéis visto.
+`int.Parse` / `double.Parse` son la forma estándar para esto. Existe también una alternativa más segura, `TryParse`, que evita la excepción, pero usarla correctamente requiere comprender `out`, que se verá en el tema de Métodos II.
 
 También existe `Convert` (`Convert.ToInt32(...)`, etc.), que aparece con frecuencia en código de otras personas. Se comporta distinto en casos raros (por ejemplo, `Convert.ToInt32(null)` da `0` en vez de lanzar excepción, mientras que `Parse` con `null` sí falla) — no hace falta usarlo activamente, pero conviene reconocerlo si aparece en código ajeno.
 
@@ -160,7 +162,7 @@ Esto es solo lo mínimo para poder usar una fecha en un ejercicio cuando haga fa
 
 ## Cómo encontrar el resto
 
-La BCL tiene muchísimos más tipos y métodos de los que caben en un tema — memorizarla no es el objetivo, y tampoco es lo que hace un desarrollador con experiencia en el día a día. Lo útil es saber que algo probablemente ya existe hecho, y cómo encontrarlo:
+La BCL tiene muchísimos más tipos y métodos de los que caben en un tema — memorizarla no es el objetivo, y tampoco es lo que hace un desarrollador con experiencia en el día a día. Si una acción parece lo bastante común, es probable que ya exista un método hecho para ella; lo importante es saber dónde buscarlo:
 
 - **IntelliSense**: en VS Code con C# Dev Kit, escribir `.` después de una variable muestra automáticamente los métodos disponibles para ese tipo, con una descripción al pasar el ratón por encima.
 - **Documentación oficial**: [Microsoft Learn](https://learn.microsoft.com/dotnet/api/) tiene la referencia completa de la BCL, con ejemplos de uso para cada método.
