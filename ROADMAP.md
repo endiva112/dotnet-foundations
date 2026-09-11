@@ -30,26 +30,26 @@ Todo en consola. El objetivo es pensar en C# sin depender de un framework encima
 
 | # | Carpeta | Contenido | Nivel |
 |---|---------|-----------|-------|
-| 00 | `00-general-dev-skills` | Git (branches, commits atómicos, .gitignore), CLI de `dotnet`, HTTP/HTTPS a nivel concepto (para más adelante) | 🟢 |
+| 00 | `00-general-dev-skills` | Git (branches, commits atómicos, .gitignore), CLI de `dotnet`, HTTP/HTTPS a nivel concepto (para más adelante) | 🟡 |
 | 01 | `01-types-and-variables` | Tipos de valor vs referencia, inferencia (`var`), constantes | 🟢 |
-| 01b | `01b-nullable-reference-types` | `?`, null-forgiving `!`, por qué importa desde ya (movido pronto a propósito) | 🟢 |
+| 01b | `01b-nullable-reference-types` | `?`, null-forgiving `!`, por qué importa desde ya (movido pronto a propósito) | 🟡 |
 | 02 | `02-control-flow` | `if/else`, `switch` clásico, operadores lógicos | 🟢 |
 | 02b | `02b-pattern-matching` | `switch` expressions, patrones (`is`, deconstrucción básica) | 🟡 |
 | 03 | `03-loops` | `while`, `do-while`, `for`, `foreach` — cuándo usar cada uno | 🟢 |
-| 04 | `04-methods` | Parámetros, sobrecarga, `ref`/`out`, valores por defecto | 🟢 |
-| 04b | `04b-enums-and-structs` | `enum` (útil para roles/estados de tu dominio), struct vs class | 🟢 |
-| 05 | `05-collections` | `List<T>`, `Dictionary<K,V>`, `HashSet<T>`, arrays | 🟢 |
-| 06 | `06-classes` | Encapsulación, constructores, propiedades, `static` | 🟢 |
-| 06b | `06b-records` | Records, inmutabilidad, `with` — muy usado en DTOs de API | 🟢 |
-| 07 | `07-interfaces` | Contratos, inyección conceptual (antes de DI de verdad) | 🟢 |
-| 08 | `08-generics` | `List<T>` por dentro, constraints básicas | 🟢 |
-| 08b | `08b-delegates-and-lambdas` | `Func<>`, `Action<>`, expresiones lambda — puente obligatorio a LINQ | 🟢 |
-| 09 | `09-exceptions` | `try/catch/finally`, excepciones propias, cuándo NO usar excepciones | 🟢 |
-| 10 | `10-linq` | Métodos de extensión, sintaxis fluida y de query | 🟢 |
-| 10b | `10b-json-serialization` | `System.Text.Json`, serializar/deserializar tus propias clases | 🟢 |
-| 11 | `11-async` | `Task`, `async/await`, por qué importa en I/O (base de todo ASP.NET Core) | 🟢 |
-| 12 | `12-files` | Lectura/escritura de ficheros, streams básicos | 🟡 |
-| 13 | `13-testing-fundamentals` | xUnit sobre clases sueltas, sin web todavía — Arrange/Act/Assert | 🟢 |
+| 04 | `04-methods` | Parámetros, sobrecarga, `ref`/`out`, valores por defecto | 🟡 |
+| 04b | `04b-enums-and-structs` | `enum` (útil para roles/estados de tu dominio), struct vs class |  |
+| 05 | `05-collections` | `List<T>`, `Dictionary<K,V>`, `HashSet<T>`, arrays |  |
+| 06 | `06-classes` | Encapsulación, constructores, propiedades, `static` |  |
+| 06b | `06b-records` | Records, inmutabilidad, `with` — muy usado en DTOs de API |  |
+| 07 | `07-interfaces` | Contratos, inyección conceptual (antes de DI de verdad) |  |
+| 08 | `08-generics` | `List<T>` por dentro, constraints básicas |  |
+| 08b | `08b-delegates-and-lambdas` | `Func<>`, `Action<>`, expresiones lambda — puente obligatorio a LINQ |  |
+| 09 | `09-exceptions` | `try/catch/finally`, excepciones propias, cuándo NO usar excepciones |  |
+| 10 | `10-linq` | Métodos de extensión, sintaxis fluida y de query |  |
+| 10b | `10b-json-serialization` | `System.Text.Json`, serializar/deserializar tus propias clases |  |
+| 11 | `11-async` | `Task`, `async/await`, por qué importa en I/O (base de todo ASP.NET Core) |  |
+| 12 | `12-files` | Lectura/escritura de ficheros, streams básicos |  |
+| 13 | `13-testing-fundamentals` | xUnit sobre clases sueltas, sin web todavía — Arrange/Act/Assert |  |
 
 🏁 **Checkpoint 0:** una app de consola que simule un caso mini del dominio (p. ej. un
 `List<Agent>` con estado, algo de LINQ para filtrar, serializado a JSON, con 3-4 tests
