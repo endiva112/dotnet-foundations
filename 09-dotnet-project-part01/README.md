@@ -86,7 +86,7 @@ bin/
 obj/
 ```
 
-No hacía falta esto antes porque un file-based app nunca llega a generar estas carpetas; a partir de ahora, cualquier carpeta con un proyecto real debería tener este `.gitignore` (el tema 00 ya mencionó que la plantilla estándar de Visual Studio ya lo cubre, por si se prefiere usar esa en vez de escribirlo a mano).
+No hacía falta esto antes porque un file-based app nunca llega a generar estas carpetas; a partir de ahora, cualquier carpeta con un proyecto real debería tener este `.gitignore`
 
 ## Punto de entrada del proyecto
 
