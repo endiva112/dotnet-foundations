@@ -55,17 +55,18 @@ Todo en consola. El objetivo es pensar en C# sin depender de un framework encima
 `List<Agent>` con estado, algo de LINQ para filtrar, serializado a JSON, con 3-4 tests
 xUnit) — esto ya demuestra que dominas el lenguaje base.
 
-- bcl (cerrado)
-- enums
+- enums 
+- pattern-matching-1        ← nuevo: switch expression + is simple
 - classes
 - metodos2
 - structs
-- herencia-y-polimorfismo   ← nuevo, aprovechando el contraste con structs
+- herencia-y-polimorfismo
+- pattern-matching-2        ← nuevo: patrones de tipo/propiedad sobre jerarquías
 - records
-- interfaces                ← contraste "extender" vs "implementar", + nota de null object
+- interfaces
 - generics
 - colecciones
-- stringbuilder   
+- stringbuilder
 
 ---
 
