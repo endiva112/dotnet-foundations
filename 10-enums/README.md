@@ -1,4 +1,4 @@
-# 09 - Enums
+# 10 - Enums
 
 ## Qué es un enum
 
@@ -21,6 +21,8 @@ EstadoPedido estado = EstadoPedido.Pendiente;
 ```
 
 Ahora `estado` solo puede valer uno de esos cuatro nombres — el compilador impide asignar cualquier otra cosa, y no hace falta acordarse de cómo se escribe cada valor porque el propio IDE los sugiere.
+
+Gracias al tema anterior, ya se sabe cómo organizar esto en un proyecto real: lo natural es declarar `EstadoPedido` en su propio archivo (por ejemplo, `EstadoPedido.cs`), y usarlo desde `Program.cs` donde sea necesario.
 
 ## Qué hay por debajo
 
