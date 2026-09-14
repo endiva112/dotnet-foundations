@@ -4,7 +4,7 @@ Se te pide gestionar el nivel de acceso de un usuario a partir de lo que introdu
 
 Requisitos:
 
-1. Declara un enum `NivelAcceso` con los valores `Invitado`, `Usuario` y `Administrador`, asignándoles explícitamente los valores numéricos `0`, `10` y `99` respectivamente (en vez de dejar que el compilador los numere automáticamente).
+1. Declara un enum `NivelAcceso` con los valores `Invitado`, `Usuario` y `Administrador`, asignándoles explícitamente los valores numéricos `0`, `10` y `99` respectivamente (en vez de dejar que el compilador los numere automáticamente). Puedes resolver este ejercicio como file-based app o como proyecto real (tema 09) — si eliges proyecto real, declara el enum en su propio archivo.
 2. Pide al usuario, por consola, que escriba el nombre de uno de los tres niveles (por ejemplo, escribiendo literalmente `Usuario`).
 3. Convierte el texto introducido a un valor de `NivelAcceso` usando `Enum.Parse`.
 4. Muestra por consola tanto el nombre del nivel como su valor numérico (con el cast correspondiente).

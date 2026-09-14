@@ -1,39 +1,40 @@
-Semaforo semaforo = Semaforo.Rojo;
-switch (semaforo)
+static void MostrarTalla(Talla talla)
 {
-    case Semaforo.Rojo:
-        Console.WriteLine("Detente");
-        break;
-    case Semaforo.Amarillo:
-        Console.WriteLine("Prepárate");
-        break;
-    case Semaforo.Verde:
-        Console.WriteLine("Avanza");
-        break;
+    switch(talla)
+    {
+        case Talla.XS:
+            Console.WriteLine("Muy pequeña");
+            break;
+        case Talla.S:
+            Console.WriteLine("Pequeña");
+            break;
+        case Talla.M:
+            Console.WriteLine("Mediana");
+            break;
+        case Talla.L:
+            Console.WriteLine("Grande");
+            break;
+        case Talla.XL:
+            Console.WriteLine("Muy grande");
+            break;
+    }
 }
-Console.WriteLine(semaforo);
-Console.WriteLine((int)semaforo);
 
+Talla miTalla = Talla.M;
+MostrarTalla(miTalla);
+Console.WriteLine(miTalla);
+Console.WriteLine((int)miTalla);
 
-semaforo = Semaforo.Verde;
-switch (semaforo)
+miTalla = Talla.XL;
+MostrarTalla(miTalla);
+Console.WriteLine(miTalla);
+Console.WriteLine((int)miTalla);
+
+enum Talla
 {
-    case Semaforo.Rojo:
-        Console.WriteLine("Detente");
-        break;
-    case Semaforo.Amarillo:
-        Console.WriteLine("Prepárate");
-        break;
-    case Semaforo.Verde:
-        Console.WriteLine("Avanza");
-        break;
-}
-Console.WriteLine(semaforo);
-Console.WriteLine((int)semaforo);
-
-enum Semaforo
-{
-    Rojo,
-    Amarillo,
-    Verde
+    XS,
+    S,
+    M,
+    L,
+    XL
 }
