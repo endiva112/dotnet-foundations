@@ -112,6 +112,37 @@ public class Persona
 
 Con `private set`, cualquier código fuera de la clase puede leer `persona.Edad`, pero no asignarlo directamente — solo la propia clase puede cambiarlo (por ejemplo, desde un método `Cumpleanos()` que incremente la edad de forma controlada). Esta es la razón por la que, en C#, se prefiere declarar propiedades en vez de campos públicos sueltos: empezar con una propiedad simple deja la puerta abierta a añadir control más adelante sin tener que cambiar el resto del código que ya la usa.
 
+### Propiedades completas
+
+Una auto-propiedad (`{ get; set; }`) tiene una limitación importante: el compilador genera el campo oculto y el cuerpo del `get`/`set` por debajo, así que no hay ningún sitio donde meter lógica propia — solo puede leer o escribir el valor sin más, nunca validarlo ni transformarlo.
+
+Cuando hace falta algo más que eso, se declara una **propiedad completa**: el campo se escribe explícitamente, y el cuerpo de `get`/`set` se controla a mano.
+
+```csharp
+public class Persona
+{
+    private int edad;
+
+    public int Edad
+    {
+        get { return edad; }
+        set
+        {
+            if (value >= 0)
+            {
+                edad = value;
+            }
+        }
+    }
+}
+```
+
+`value` es una palabra clave especial, disponible solo dentro de un `set` — representa lo que se está intentando asignar. Aquí, si alguien intenta `persona.Edad = -10;`, la condición del `set` lo descarta silenciosamente y `edad` se queda con el valor que tenía antes (en un ejercicio real convendría avisar de algún modo, pero eso se apoya en excepciones, que todavía no se han visto).
+
+Desde fuera de la clase, una propiedad completa se usa exactamente igual que una auto-propiedad (`persona.Edad = 30;`, `persona.Edad` para leerla) — la diferencia está solo en cómo se declara, no en cómo se consume.
+
+**Regla práctica**: empezar siempre por una auto-propiedad. Solo pasar a una propiedad completa con campo propio en el momento en que el `get` o el `set` necesiten hacer algo más que leer o escribir el valor sin condiciones — validar un rango, transformar un dato, o reaccionar al cambio. Si no hace falta nada de eso, escribir una propiedad completa solo añade líneas sin ningún beneficio real.
+
 ## Miembros estáticos frente a miembros de instancia
 
 Ya se usó `static` en métodos sueltos (tema 06) y en toda la BCL (`Math.Abs`, tema 08). Dentro de una clase, la distinción se vuelve más visible: un miembro **static** pertenece a la clase en sí, uno solo para todas las instancias; un miembro normal (de instancia) pertenece a cada objeto por separado, con su propia copia:
