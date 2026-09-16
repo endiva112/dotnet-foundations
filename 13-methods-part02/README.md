@@ -2,7 +2,7 @@
 
 ## Sobrecarga (overload)
 
-Recordando el tema 06: en top-level statements, dos métodos con el mismo nombre chocan, porque son funciones locales y viven en el ámbito de una función, no de un tipo — la sobrecarga en C# solo se resuelve dentro del ámbito de un tipo. Ahora que existen las clases (tema 12), ese ámbito ya está disponible: dos métodos con el mismo nombre pueden coexistir en la misma clase, siempre que se diferencien en el número o el tipo de sus parámetros.
+Recordando el tema 06: en top-level statements, dos métodos con el mismo nombre chocan, porque son funciones locales y viven en el ámbito de una función, no de un tipo — la sobrecarga en C# solo se resuelve dentro del ámbito de un tipo. Ahora que se sabe hacer uso de las clases (tema 12), ese ámbito ya está disponible: dos métodos con el mismo nombre pueden coexistir en la misma clase, siempre que se diferencien en el número o el tipo de sus parámetros.
 
 ```csharp
 public class Calculadora
