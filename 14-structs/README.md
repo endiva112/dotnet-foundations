@@ -102,10 +102,10 @@ Todo struct tiene un estado "vacío" automático, con cada campo en su valor por
 
 ```csharp
 Punto vacio = default(Punto); // X = 0, Y = 0
-Punto tambienVacio = new Punto(); // igual, si no se ha definido un constructor propio sin parámetros
+Punto tambienVacio = new Punto(); // igual, mientras no exista un constructor propio sin parámetros
 ```
 
-Desde versiones recientes de C#, también se puede escribir un constructor sin parámetros propio (algo que antes no estaba permitido en absoluto):
+Desde versiones recientes de C#, también se puede escribir un constructor sin parámetros propio (algo que antes no estaba permitido en absoluto). Y aquí `default` y `new Punto()` **dejan de ser intercambiables**:
 
 ```csharp
 public struct Punto
@@ -127,6 +127,16 @@ public struct Punto
 }
 ```
 
+```csharp
+Punto a = new Punto();
+Console.WriteLine(a.X); // -1 — se ejecutó el constructor personalizado
+
+Punto b = default;
+Console.WriteLine(b.X); // 0 — default nunca ejecuta ningún constructor, solo pone cada campo a su valor por defecto
+```
+
+La diferencia de fondo: `default` **nunca** ejecuta ningún constructor, sea el que sea — simplemente pone cada campo a su valor por defecto directamente. `new Punto()` sí ejecuta el constructor sin parámetros si existe uno definido, y solo cae en los valores por defecto de cada campo cuando no hay ningún constructor propio que lo sustituya.
+
 ## Structs no heredan, pero pueden implementar interfaces
 
 Un `struct` no puede heredar de otro struct ni de una clase, y tampoco puede ser heredado — a diferencia de una clase, esto no es una limitación temporal del curso, es una restricción real del lenguaje. Lo único que un struct puede hacer en esta dirección es implementar interfaces, igual que una clase (tema de Interfaces, más adelante). El motivo de fondo se retoma cuando se compare directamente con clases, en el tema siguiente.
@@ -142,8 +152,19 @@ Punto b = new Punto(1, 1);
 Console.WriteLine(a == b); // no compila, si Punto no define == explícitamente
 ```
 
-Sí existe un `Equals(object)` heredado automáticamente, que funciona pero es más lento de lo que parece (compara campo a campo usando reflexión por debajo). Definir `==` a mano es posible pero se deja fuera de este tema; el porqué de esta limitación, y una alternativa que la resuelve de forma automática, se retoma cuando se vea `record struct`, en el tema de Records.
+Sí existe un `Equals(object)` heredado automáticamente, que proporciona igualdad por valor (compara el contenido, no la identidad) — pero su implementación por defecto no es la más eficiente, y los detalles de cómo lo consigue por debajo varían según el struct. Para código de producción, es habitual implementar la interfaz `IEquatable<T>` en el propio struct, ganando una comparación más rápida y explícita — algo que se retoma cuando se vea `record struct`, en el tema de Records, que resuelve esto de forma automática sin tener que escribirlo a mano.
 
 ## Cuándo usar struct en vez de class
 
 No es una regla mecánica, sino una guía de diseño: un struct encaja bien para datos pequeños, de vida corta, que se comportan como "un valor" más que como "una entidad" — coordenadas, rangos, medidas, colores. Si los datos son grandes, se pasan mucho entre métodos sin `ref`, o representan algo con identidad propia que tiene sentido compartir (un `Cliente`, una `CuentaBancaria` del tema 12), una clase sigue siendo la opción correcta. Ante la duda, class es el valor por defecto razonable — struct se elige de forma consciente, no por costumbre.
+
+## Resumen: struct frente a class
+
+| | `struct` | `class` |
+|---|---|---|
+| Tipo | Por valor | Por referencia |
+| Asignación / paso a método | Copia el contenido | Comparte la referencia |
+| Herencia | No puede heredar ni ser heredado | Sí |
+| Implementar interfaces | Sí | Sí |
+| `==` por defecto | No compila sin definirlo | Compara referencias (identidad) |
+| Dónde vive | Pila (o inline dentro de otro objeto) | Heap |
