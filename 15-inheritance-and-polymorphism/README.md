@@ -179,6 +179,39 @@ persona2.Saludar(); // "Hola, soy Luis y trabajo aquí." — se ejecuta el overr
 
 Aunque `persona2` está declarada como `Persona`, el objeto al que apunta es realmente un `Empleado` — y es ese tipo real, no el de la variable, el que decide qué versión de `Saludar()` se ejecuta. Esto es lo que permite tratar una colección de `Persona` (una vez se vea `List<T>`, en el tema de colecciones) que en realidad contenga una mezcla de `Persona` y `Empleado`, y que cada uno salude a su manera sin que el código que los recorre necesite saber de qué tipo concreto es cada uno.
 
+### El tipo de la variable limita lo que se puede usar, no lo que el objeto tiene
+
+`virtual`/`override` es la excepción, no la regla: para todo lo demás, es el **tipo de la variable** el que decide qué se puede hacer con un objeto, sin que importe lo que el objeto en sí contenga realmente. Se ve claro con un miembro que **no** es un override de nada — uno que existe únicamente en la clase derivada:
+
+```csharp
+public class Empleado : Persona
+{
+    public string Empresa { get; set; }
+
+    public void MencionarEmpresa()
+    {
+        Console.WriteLine($"Trabajo en {Empresa}.");
+    }
+}
+```
+
+```csharp
+Persona persona = new Empleado { Nombre = "Luis", Empresa = "Acme" };
+
+persona.MencionarEmpresa(); // error de compilación: Persona no tiene MencionarEmpresa()
+```
+
+El objeto al que apunta `persona` es, en tiempo de ejecución, un `Empleado` completo — con su campo `Empresa` y su método `MencionarEmpresa()` intactos, nada de eso desaparece. Pero el compilador no decide qué se puede escribir mirando el objeto real (eso ni lo sabe todavía, solo existe al ejecutar el programa) — lo decide mirando el tipo de la variable, y `Persona` no declara `MencionarEmpresa()`. Da igual que el objeto detrás sí lo tenga: a través de una variable `Persona`, ese miembro no es alcanzable.
+
+Para llegar a él hace falta convertir explícitamente `persona` de vuelta a `Empleado`:
+
+```csharp
+Empleado empleado = (Empleado)persona;
+empleado.MencionarEmpresa(); // ahora sí
+```
+
+Esto se llama **downcasting**, y tiene más matices de los que este ejemplo deja ver (qué pasa si el objeto real no fuera un `Empleado`, por ejemplo) — se explica con detalle en la sección **Upcasting y downcasting**, más abajo en este mismo tema. De momento basta con quedarse con la idea de fondo: **qué objeto es realmente**, en el heap, no cambia nunca por cómo se declare una variable; pero **qué se puede hacer con él a través de esa variable concreta** lo decide el compilador, mirando únicamente su tipo declarado.
+
 ### `virtual`/`override` en propiedades
 
 El mismo mecanismo aplica a propiedades, no solo a métodos — tiene sentido, dado que una propiedad no es más que un `get`/`set` con sintaxis particular (tema de Clases):
@@ -345,23 +378,23 @@ Console.WriteLine(persona); // "Persona: Ana"
 
 ## Upcasting y downcasting
 
-Ya ha aparecido varias veces arriba sin nombrarlo: asignar un objeto de tipo derivado a una variable de tipo base es automático, no requiere ninguna sintaxis especial.
+Antes quedó pendiente el detalle de por qué `(Empleado)persona` no siempre es seguro, con el ejemplo de `MencionarEmpresa()`. Retomando ese hilo: la conversión de `Empleado` (derivada) hacia `Persona` (base) es automática y siempre segura — es justo lo que ya se hizo sin nombrarlo, al escribir `Persona persona = new Empleado {...}`. Esto se llama **upcasting**:
 
 ```csharp
 Empleado empleado = new Empleado();
 Persona persona = empleado; // upcasting implícito, siempre seguro
 ```
 
-Esto es siempre seguro porque un `Empleado` **es** una `Persona` — nunca puede fallar en tiempo de ejecución.
+Es seguro porque un `Empleado` **es** una `Persona` — nunca puede fallar en tiempo de ejecución.
 
-El camino inverso, volver de la base a la derivada, no es automático — hace falta un cast explícito:
+Para volver a alcanzar `MencionarEmpresa()` hace falta el camino inverso, llamado **downcasting**: un cast explícito que le dice al compilador "trata esto como lo que realmente es".
 
 ```csharp
-Persona persona = new Empleado();
-Empleado empleado = (Empleado)persona; // downcasting explícito
+Empleado empleado = (Empleado)persona;
+empleado.MencionarEmpresa(); // ahora sí — empleado está declarada como Empleado
 ```
 
-Este cast puede fallar en tiempo de ejecución si el objeto real no es del tipo al que se intenta convertir:
+A diferencia del upcasting, el downcasting no es automático ni está garantizado — puede fallar en tiempo de ejecución si el objeto real no es del tipo al que se intenta convertir:
 
 ```csharp
 Persona persona = new Persona(); // objeto real: Persona, no Empleado
