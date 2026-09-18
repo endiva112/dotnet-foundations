@@ -141,7 +141,7 @@ Resumen de lo cubierto hasta ahora:
 | `protected` | La propia clase y sus derivadas, en cualquier proyecto |
 | `private` | Solo la propia clase |
 
-## `virtual` y `override`: el mecanismo de polimorfismo
+## `virtual` y `override`
 
 Heredar un método tal cual, como `Saludar()` en el primer ejemplo, es útil pero limitado: ¿qué pasa si `Empleado` necesita saludar de forma distinta, mencionando su puesto? Podría declarar un método nuevo con otro nombre, pero eso rompe la idea de que ambos tipos "saben saludar" de forma intercambiable. La solución es permitir que la clase derivada **reemplace** la implementación heredada, conservando el mismo nombre:
 
@@ -179,7 +179,7 @@ persona2.Saludar(); // "Hola, soy Luis y trabajo aquí." — se ejecuta el overr
 
 Aunque `persona2` está declarada como `Persona`, el objeto al que apunta es realmente un `Empleado` — y es ese tipo real, no el de la variable, el que decide qué versión de `Saludar()` se ejecuta. Esto es lo que permite tratar una colección de `Persona` (una vez se vea `List<T>`, en el tema de colecciones) que en realidad contenga una mezcla de `Persona` y `Empleado`, y que cada uno salude a su manera sin que el código que los recorre necesite saber de qué tipo concreto es cada uno.
 
-### El tipo de la variable limita lo que se puede usar, no lo que el objeto tiene
+### Tipo de la variable frente a tipo real del objeto
 
 `virtual`/`override` es la excepción, no la regla: para todo lo demás, es el **tipo de la variable** el que decide qué se puede hacer con un objeto, sin que importe lo que el objeto en sí contenga realmente. Se ve claro con un miembro que **no** es un override de nada — uno que existe únicamente en la clase derivada:
 
@@ -293,7 +293,7 @@ new Empleado().Saludar();
 
 Esto es distinto de no hacer `override` en absoluto: aquí sí se reemplaza el método, pero la nueva implementación decide conservar y reutilizar la lógica original como parte de la suya, en vez de duplicarla escribiéndola de nuevo.
 
-## `new` como ocultación de miembro: una trampa a evitar
+## `new` como ocultación de miembro
 
 Es posible declarar en una derivada un miembro con el mismo nombre que uno de la base **sin** `virtual`/`override`, usando `new`:
 
@@ -322,7 +322,7 @@ persona.Saludar(); // "Hola, soy una persona." — usa la versión de Persona, N
 
 A diferencia de `override`, aquí no hay polimorfismo: qué versión se ejecuta depende del tipo de la **variable**, no del tipo real del objeto — justo lo contrario de lo que se vio con `virtual`/`override`. `new` no reemplaza el método heredado, simplemente oculta su nombre cuando se accede a través del tipo derivado. Es un error común, sobre todo si se está acostumbrado a un lenguaje donde este matiz no existe: si la intención es polimorfismo, la combinación correcta es siempre `virtual` en la base y `override` en la derivada, nunca `new`.
 
-## `sealed`: cerrar la cadena
+## `sealed`
 
 `sealed` en una clase impide que se siga heredando de ella:
 
@@ -344,7 +344,7 @@ public override sealed void Saludar()
 
 Se usa cuando se quiere garantizar que un tipo o un comportamiento concreto queda fijado, sin posibilidad de modificarse más abajo en la cadena.
 
-## `object`: la base de todo
+## La clase `object`
 
 Toda clase en C#, aunque no lo declare explícitamente, hereda de `object` — es la raíz de la que parte cualquier jerarquía. Esto explica algo que ya se ha visto sin mencionarlo: `Console.WriteLine(objeto)` siempre puede imprimir algo, aunque sea una clase propia sin ningún código especial, porque `object` ya define un método `ToString()` que toda clase hereda.
 
