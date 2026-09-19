@@ -44,60 +44,60 @@
 
     Esto es distinto de otros lenguajes que sí permiten herencia múltiple de clases. La forma en que C# resuelve la necesidad de que un tipo cumpla "varios contratos" a la vez no es heredando de varias clases, sino **implementando varias interfaces** — un mecanismo distinto, que se ve en su propio tema más adelante.
 
-## Constructores en la jerarquía
+    ## Constructores en la jerarquía
 
-Un constructor de la clase derivada no inicializa automáticamente los datos que pertenecen a la clase base — tiene que delegar explícitamente en un constructor de la base, con `base(...)`:
+    Un constructor de la clase derivada no inicializa automáticamente los datos que pertenecen a la clase base — tiene que delegar explícitamente en un constructor de la base, con `base(...)`:
 
-```csharp
-public class Persona
-{
-    public string Nombre { get; set; }
-    public int Edad { get; set; }
-
-    public Persona(string nombre, int edad)
+    ```csharp
+    public class Persona
     {
-        Nombre = nombre;
-        Edad = edad;
+        public string Nombre { get; set; }
+        public int Edad { get; set; }
+
+        public Persona(string nombre, int edad)
+        {
+            Nombre = nombre;
+            Edad = edad;
+        }
     }
-}
 
-public class Empleado : Persona
-{
-    public decimal Salario { get; set; }
-
-    public Empleado(string nombre, int edad, decimal salario) : base(nombre, edad)
+    public class Empleado : Persona
     {
-        Salario = salario;
+        public decimal Salario { get; set; }
+
+        public Empleado(string nombre, int edad, decimal salario) : base(nombre, edad)
+        {
+            Salario = salario;
+        }
     }
-}
-```
+    ```
 
-```csharp
-Empleado empleado = new Empleado("Ana", 30, 25000);
-```
+    ```csharp
+    Empleado empleado = new Empleado("Ana", 30, 25000);
+    ```
 
-`: base(nombre, edad)` llama al constructor `Persona(string, int)` antes de ejecutar el cuerpo del constructor de `Empleado` — la clase base siempre termina de construirse primero, y solo entonces se ejecuta lo propio de la derivada.
+    `: base(nombre, edad)` llama al constructor `Persona(string, int)` antes de ejecutar el cuerpo del constructor de `Empleado` — la clase base siempre termina de construirse primero, y solo entonces se ejecuta lo propio de la derivada.
 
-Si `Persona` no tuviera ningún constructor propio, `base()` sería opcional (C# lo asume implícitamente, llamando al constructor vacío por defecto). Pero en cuanto `Persona` define un constructor con parámetros —tal como ocurrió en el tema de Clases—, su constructor vacío por defecto deja de existir. Eso significa que `Empleado` está obligado a llamar explícitamente a `base(nombre, edad)`, o a algún otro constructor de `Persona` que exista; si no lo hace, no compila.
+    Si `Persona` no tuviera ningún constructor propio, `base()` sería opcional (C# lo asume implícitamente, llamando al constructor vacío por defecto). Pero en cuanto `Persona` define un constructor con parámetros —tal como ocurrió en el tema de Clases—, su constructor vacío por defecto deja de existir. Eso significa que `Empleado` está obligado a llamar explícitamente a `base(nombre, edad)`, o a algún otro constructor de `Persona` que exista; si no lo hace, no compila.
 
-### Herencia multinivel
+    ### Herencia multinivel
 
-La cadena de herencia no se limita a un único nivel — una clase derivada puede a su vez ser la base de otra:
+    La cadena de herencia no se limita a un único nivel — una clase derivada puede a su vez ser la base de otra:
 
-```csharp
-public class Gerente : Empleado
-{
-    public int PersonasACargo { get; set; }
-
-    public Gerente(string nombre, int edad, decimal salario, int personasACargo)
-        : base(nombre, edad, salario)
+    ```csharp
+    public class Gerente : Empleado
     {
-        PersonasACargo = personasACargo;
-    }
-}
-```
+        public int PersonasACargo { get; set; }
 
-`base(...)` aquí llama al constructor de `Empleado`, que a su vez llama al de `Persona` — la cadena se resuelve nivel a nivel, de la derivada más lejana hacia la base más raíz, cada una terminando de construirse antes de pasar a la siguiente. Los cuerpos de los constructores, sin embargo, se ejecutan en el orden contrario: primero el de `Persona`, luego el de `Empleado`, y por último el de `Gerente` — cada nivel confía en que todo lo que hereda ya está inicializado antes de añadir lo suyo.
+        public Gerente(string nombre, int edad, decimal salario, int personasACargo)
+            : base(nombre, edad, salario)
+        {
+            PersonasACargo = personasACargo;
+        }
+    }
+    ```
+
+    `base(...)` aquí llama al constructor de `Empleado`, que a su vez llama al de `Persona` — la cadena se resuelve nivel a nivel, de la derivada más lejana hacia la base más raíz, cada una terminando de construirse antes de pasar a la siguiente. Los cuerpos de los constructores, sin embargo, se ejecutan en el orden contrario: primero el de `Persona`, luego el de `Empleado`, y por último el de `Gerente` — cada nivel confía en que todo lo que hereda ya está inicializado antes de añadir lo suyo.
 
 ## Modificadores de acceso: `protected` e `internal`
 
