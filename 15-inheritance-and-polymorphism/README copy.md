@@ -44,41 +44,41 @@
 
     Esto es distinto de otros lenguajes que sí permiten herencia múltiple de clases. La forma en que C# resuelve la necesidad de que un tipo cumpla "varios contratos" a la vez no es heredando de varias clases, sino **implementando varias interfaces** — un mecanismo distinto, que se ve en su propio tema más adelante.
 
-    ## Constructores en la jerarquía
+## Constructores en la jerarquía
 
-    Un constructor de la clase derivada no inicializa automáticamente los datos que pertenecen a la clase base — tiene que delegar explícitamente en un constructor de la base, con `base(...)`:
+Un constructor de la clase derivada no inicializa automáticamente los datos que pertenecen a la clase base — tiene que delegar explícitamente en un constructor de la base, con `base(...)`:
 
-    ```csharp
-    public class Persona
+```csharp
+public class Persona
+{
+    public string Nombre { get; set; }
+    public int Edad { get; set; }
+
+    public Persona(string nombre, int edad)
     {
-        public string Nombre { get; set; }
-        public int Edad { get; set; }
-
-        public Persona(string nombre, int edad)
-        {
-            Nombre = nombre;
-            Edad = edad;
-        }
+        Nombre = nombre;
+        Edad = edad;
     }
+}
 
-    public class Empleado : Persona
+public class Empleado : Persona
+{
+    public decimal Salario { get; set; }
+
+    public Empleado(string nombre, int edad, decimal salario) : base(nombre, edad)
     {
-        public decimal Salario { get; set; }
-
-        public Empleado(string nombre, int edad, decimal salario) : base(nombre, edad)
-        {
-            Salario = salario;
-        }
+        Salario = salario;
     }
-    ```
+}
+```
 
-    ```csharp
-    Empleado empleado = new Empleado("Ana", 30, 25000);
-    ```
+```csharp
+Empleado empleado = new Empleado("Ana", 30, 25000);
+```
 
-    `: base(nombre, edad)` llama al constructor `Persona(string, int)` antes de ejecutar el cuerpo del constructor de `Empleado` — la clase base siempre termina de construirse primero, y solo entonces se ejecuta lo propio de la derivada.
+`: base(nombre, edad)` llama al constructor `Persona(string, int)` antes de ejecutar el cuerpo del constructor de `Empleado` — la clase base siempre termina de construirse primero, y solo entonces se ejecuta lo propio de la derivada.
 
-    Si `Persona` no tuviera ningún constructor propio, `base()` sería opcional (C# lo asume implícitamente, llamando al constructor vacío por defecto). Pero en cuanto `Persona` define un constructor con parámetros —tal como ocurrió en el tema de Clases—, su constructor vacío por defecto deja de existir. Eso significa que `Empleado` está obligado a llamar explícitamente a `base(nombre, edad)`, o a algún otro constructor de `Persona` que exista; si no lo hace, no compila.
+Si `Persona` no tuviera ningún constructor propio, `base()` sería opcional (C# lo asume implícitamente, llamando al constructor vacío por defecto). Pero en cuanto `Persona` define un constructor con parámetros —tal como ocurrió en el tema de Clases—, su constructor vacío por defecto deja de existir. Eso significa que `Empleado` está obligado a llamar explícitamente a `base(nombre, edad)`, o a algún otro constructor de `Persona` que exista; si no lo hace, no compila.
 
 ### Herencia multinivel
 
@@ -97,7 +97,7 @@ public class Gerente : Empleado
 }
 ```
 
-`base(...)` aquí llama al constructor de `Empleado`, que a su vez llama al de `Persona` — la cadena se resuelve nivel a nivel, de la derivada más lejana hacia la base más raíz, cada una terminando de construirse antes de pasar a la siguiente.
+`base(...)` aquí llama al constructor de `Empleado`, que a su vez llama al de `Persona` — la cadena se resuelve nivel a nivel, de la derivada más lejana hacia la base más raíz, cada una terminando de construirse antes de pasar a la siguiente. Los cuerpos de los constructores, sin embargo, se ejecutan en el orden contrario: primero el de `Persona`, luego el de `Empleado`, y por último el de `Gerente` — cada nivel confía en que todo lo que hereda ya está inicializado antes de añadir lo suyo.
 
 ## Modificadores de acceso: `protected` e `internal`
 
@@ -106,20 +106,28 @@ Con solo `public` y `private` (tema de Clases), un miembro o es visible para tod
 ```csharp
 public class Persona
 {
-    protected string DatoInterno; // visible en Persona y en cualquier clase derivada, no fuera
+    public string Nombre { get; protected set; } // cualquiera puede leerlo, solo Persona y sus derivadas pueden modificarlo
 
-    private string SoloPersona; // ni siquiera Empleado puede acceder a esto
+    private int edad; // ni siquiera Empleado puede acceder a esto
 }
 
 public class Empleado : Persona
 {
-    public void Metodo()
+    public void Renombrar(string nuevoNombre)
     {
-        DatoInterno = "algo"; // funciona, Empleado hereda de Persona
-        SoloPersona = "algo"; // error de compilación: SoloPersona es private en Persona
+        Nombre = nuevoNombre; // funciona: el set es protected, y Empleado hereda de Persona
+        edad = 30;            // error de compilación: edad es private en Persona
     }
 }
 ```
+
+```csharp
+Empleado empleado = new Empleado();
+Console.WriteLine(empleado.Nombre); // funciona: el get es público
+empleado.Nombre = "Ana";            // error de compilación: el set es protected
+```
+
+Un modificador delante de `get` o `set` restringe solo ese acceso concreto — el resto de la propiedad conserva la visibilidad que tenga declarada. Esto es una extensión directa de lo ya visto en Clases (`private set` para impedir cualquier asignación externa); aquí simplemente se cambia `private` por `protected`, permitiendo que las derivadas sí puedan asignar, aunque el resto del mundo no.
 
 `internal`, por su parte, restringe la visibilidad a nivel de proyecto: un miembro (o incluso una clase entera) marcado `internal` es visible desde cualquier sitio dentro del mismo proyecto, pero no desde otro proyecto que lo referencie como dependencia.
 
@@ -262,6 +270,38 @@ Un miembro `abstract` no tiene cuerpo — no implementa nada, solo declara que t
 
 Una clase `abstract` sí puede tener miembros normales (no abstractos), con implementación completa, junto a los abstractos — no todo tiene que quedar pendiente de la derivada.
 
+### Constructores en una clase abstracta
+
+Aunque no se pueda instanciar con `new`, una clase `abstract` sí puede tener constructores. No se ejecutan nunca por sí solos, pero sí cuando una derivada los invoca con `base(...)`, exactamente igual que en cualquier otra jerarquía. Lo habitual es declararlos `protected` en vez de `public`, precisamente porque solo tiene sentido que los llame una derivada — ningún código externo puede crear un `Figura` directamente, así que un constructor `public` ahí sería engañoso:
+
+```csharp
+public abstract class Figura
+{
+    public string Nombre { get; set; }
+
+    protected Figura(string nombre)
+    {
+        Nombre = nombre;
+    }
+
+    public abstract double Area { get; }
+}
+
+public class Circulo : Figura
+{
+    public double Radio { get; set; }
+
+    public Circulo(double radio) : base("Círculo")
+    {
+        Radio = radio;
+    }
+
+    public override double Area => Math.PI * Radio * Radio;
+}
+```
+
+`Circulo` sigue sin poder omitir `base("Círculo")` si `Figura` no tiene un constructor vacío — la misma regla que ya se vio en Constructores en la jerarquía, sin ninguna excepción por el hecho de que `Figura` sea abstracta.
+
 ## `base.Metodo()`: extender en vez de reemplazar
 
 Un `override` no está obligado a descartar por completo la implementación de la base — puede invocarla explícitamente con `base.Metodo()` y añadir algo más alrededor:
@@ -344,6 +384,16 @@ public override sealed void Saludar()
 
 Se usa cuando se quiere garantizar que un tipo o un comportamiento concreto queda fijado, sin posibilidad de modificarse más abajo en la cadena.
 
+### Resumen de modificadores de herencia
+
+| Modificador | Se pone en | Qué hace | ¿Da polimorfismo? |
+|---|---|---|---|
+| `virtual` | Método o propiedad de la base | Permite que las derivadas lo reemplacen | Sí, junto con `override` |
+| `override` | Método o propiedad de la derivada | Reemplaza la implementación heredada | Sí |
+| `abstract` | Clase, o miembro de una clase abstracta | En una clase, impide instanciarla; en un miembro, lo deja sin cuerpo y obliga a las derivadas a hacer `override` | Sí, a través del `override` obligatorio |
+| `new` | Miembro de la derivada | Oculta el miembro heredado, sin reemplazarlo | No |
+| `sealed` | Clase, o método `override` | Impide seguir heredando, o volver a sobreescribir | No aplica — cierra la cadena |
+
 ## La clase `object`
 
 Toda clase en C#, aunque no lo declare explícitamente, hereda de `object` — es la raíz de la que parte cualquier jerarquía. Esto explica algo que ya se ha visto sin mencionarlo: `Console.WriteLine(objeto)` siempre puede imprimir algo, aunque sea una clase propia sin ningún código especial, porque `object` ya define un método `ToString()` que toda clase hereda.
@@ -412,3 +462,9 @@ if (persona is Empleado)
 ```
 
 Esto funciona, pero es repetitivo — comprobar el tipo y luego castear por separado. Pattern Matching II, el tema siguiente, resuelve exactamente esta repetición con patrones de tipo (`is Empleado emp`, comprobación y cast en un solo paso) y patrones de propiedad, que solo tienen sentido real ahora que existe una jerarquía de clases sobre la que aplicarlos.
+
+## Cuándo conviene usar herencia
+
+La herencia encaja bien cuando se cumplen dos condiciones a la vez. Primera, la relación "es un" es real y permanente — un `Circulo` siempre es una `Figura`, no algo que empieza siendo `Figura` y en algún momento deja de serlo. Segunda, hay código que se beneficia de tratar a las derivadas de forma intercambiable a través del tipo base, como ya se vio con `figura.Area` o con una colección mixta de `Persona`/`Empleado`. `Figura` y `Circulo` cumplen ambas condiciones, y es exactamente por eso que se han usado como el ejemplo central de `abstract` y `virtual`/`override` en este tema.
+
+`Persona` y `Empleado` se han usado aquí por ser el ejemplo más directo para introducir la sintaxis de herencia, pero conviene tenerlo presente de cara a diseño propio: en un programa real, ser empleado suele ser un rol que una persona puede adquirir o dejar de tener, no un tipo distinto de persona de forma permanente. Para esa clase de relación suele encajar mejor la **composición** — una `Persona` que tiene una propiedad `Empleo` (un objeto aparte, con su propio salario y empresa), en vez de una `Persona` que "es" un `Empleado`. Si la única razón para heredar es reutilizar código, y no hay un "es un" real y permanente detrás, la composición suele envejecer mejor.
