@@ -99,55 +99,55 @@
 
     `base(...)` aquí llama al constructor de `Empleado`, que a su vez llama al de `Persona` — la cadena se resuelve nivel a nivel, de la derivada más lejana hacia la base más raíz, cada una terminando de construirse antes de pasar a la siguiente. Los cuerpos de los constructores, sin embargo, se ejecutan en el orden contrario: primero el de `Persona`, luego el de `Empleado`, y por último el de `Gerente` — cada nivel confía en que todo lo que hereda ya está inicializado antes de añadir lo suyo.
 
-## Modificadores de acceso: `protected` e `internal`
+    ## Modificadores de acceso: `protected` e `internal`
 
-Con solo `public` y `private` (tema de Clases), un miembro o es visible para todo el mundo o solo para la propia clase — no hay término medio para "visible para esta clase y sus derivadas, pero no para cualquier otro código". `protected` cubre exactamente eso:
+    Con solo `public` y `private` (tema de Clases), un miembro o es visible para todo el mundo o solo para la propia clase — no hay término medio para "visible para esta clase y sus derivadas, pero no para cualquier otro código". `protected` cubre exactamente eso:
 
-```csharp
-public class Persona
-{
-    public string Nombre { get; protected set; } // cualquiera puede leerlo, solo Persona y sus derivadas pueden modificarlo
-
-    private int edad; // ni siquiera Empleado puede acceder a esto
-}
-
-public class Empleado : Persona
-{
-    public void Renombrar(string nuevoNombre)
+    ```csharp
+    public class Persona
     {
-        Nombre = nuevoNombre; // funciona: el set es protected, y Empleado hereda de Persona
-        edad = 30;            // error de compilación: edad es private en Persona
+        public string Nombre { get; protected set; } // cualquiera puede leerlo, solo Persona y sus derivadas pueden modificarlo
+
+        private int edad; // ni siquiera Empleado puede acceder a esto
     }
-}
-```
 
-```csharp
-Empleado empleado = new Empleado();
-Console.WriteLine(empleado.Nombre); // funciona: el get es público
-empleado.Nombre = "Ana";            // error de compilación: el set es protected
-```
+    public class Empleado : Persona
+    {
+        public void Renombrar(string nuevoNombre)
+        {
+            Nombre = nuevoNombre; // funciona: el set es protected, y Empleado hereda de Persona
+            edad = 30;            // error de compilación: edad es private en Persona
+        }
+    }
+    ```
 
-Un modificador delante de `get` o `set` restringe solo ese acceso concreto — el resto de la propiedad conserva la visibilidad que tenga declarada. Esto es una extensión directa de lo ya visto en Clases (`private set` para impedir cualquier asignación externa); aquí simplemente se cambia `private` por `protected`, permitiendo que las derivadas sí puedan asignar, aunque el resto del mundo no.
+    ```csharp
+    Empleado empleado = new Empleado();
+    Console.WriteLine(empleado.Nombre); // funciona: el get es público
+    empleado.Nombre = "Ana";            // error de compilación: el set es protected
+    ```
 
-`internal`, por su parte, restringe la visibilidad a nivel de proyecto: un miembro (o incluso una clase entera) marcado `internal` es visible desde cualquier sitio dentro del mismo proyecto, pero no desde otro proyecto que lo referencie como dependencia.
+    Un modificador delante de `get` o `set` restringe solo ese acceso concreto — el resto de la propiedad conserva la visibilidad que tenga declarada. Esto es una extensión directa de lo ya visto en Clases (`private set` para impedir cualquier asignación externa); aquí simplemente se cambia `private` por `protected`, permitiendo que las derivadas sí puedan asignar, aunque el resto del mundo no.
 
-```csharp
-internal class Configuracion
-{
-    // visible en todo este proyecto, invisible desde fuera de él
-}
-```
+    `internal`, por su parte, restringe la visibilidad a nivel de proyecto: un miembro (o incluso una clase entera) marcado `internal` es visible desde cualquier sitio dentro del mismo proyecto, pero no desde otro proyecto que lo referencie como dependencia.
 
-Con un único proyecto en el temario hasta ahora, la diferencia entre `internal` y `public` no se nota en la práctica — se volverá relevante en cuanto exista más de un proyecto (por ejemplo, una librería separada del programa que la consume), algo que se retoma en Proyectos .NET II. Existen además combinaciones de estos cuatro modificadores (`protected internal`, `private protected`), que se dejan fuera por la misma razón: su utilidad solo se aprecia con varios proyectos de por medio.
+    ```csharp
+    internal class Configuracion
+    {
+        // visible en todo este proyecto, invisible desde fuera de él
+    }
+    ```
 
-Resumen de lo cubierto hasta ahora:
+    Con un único proyecto en el temario hasta ahora, la diferencia entre `internal` y `public` no se nota en la práctica — se volverá relevante en cuanto exista más de un proyecto (por ejemplo, una librería separada del programa que la consume), algo que se retoma en Proyectos .NET II. Existen además combinaciones de estos cuatro modificadores (`protected internal`, `private protected`), que se dejan fuera por la misma razón: su utilidad solo se aprecia con varios proyectos de por medio.
 
-| Modificador | Visible desde |
-|---|---|
-| `public` | Cualquier código, de cualquier proyecto |
-| `internal` | Cualquier código, dentro del mismo proyecto |
-| `protected` | La propia clase y sus derivadas, en cualquier proyecto |
-| `private` | Solo la propia clase |
+    Resumen de lo cubierto hasta ahora:
+
+    | Modificador | Visible desde |
+    |---|---|
+    | `public` | Cualquier código, de cualquier proyecto |
+    | `internal` | Cualquier código, dentro del mismo proyecto |
+    | `protected` | La propia clase y sus derivadas, en cualquier proyecto |
+    | `private` | Solo la propia clase |
 
 ## `virtual` y `override`
 

@@ -72,7 +72,7 @@ public class Animal
     //métodos de Animal
     public void Comer()
     {
-        Console.WriteLine($"Estoy comiendo");
+        Console.WriteLine($"Estoy comiendo. Ahora peso {Peso} Kg");
     }
 }
 ```
@@ -186,3 +186,164 @@ Resumen de lo cubierto hasta ahora:
 | `internal` | Cualquier código, dentro del mismo proyecto |
 | `protected` | La propia clase y sus derivadas, en cualquier proyecto |
 | `private` | Solo la propia clase |
+
+## Sobrescritura (*overriding*) de métodos
+
+Heredar un método tal cual, como `Comer()` en el primer ejemplo, es útil pero limitado: ¿qué pasa si `Animal` necesita expresar qué tipo de alimento concreto come? Se podría declarar un método nuevo con otro nombre, pero eso rompe la idea de que ambos tipos "saben comer" de forma intercambiable. La solución para este problema se conoce como **sobrescritura**; la cual permite que la clase derivada **reemplace** la implementación heredada, conservando el mismo nombre:
+
+Para ello C# hace uso de la palabra reservada `virtual`, la cual marca el método como "reemplazable" en la clase base. Y la palabra reservada  `override` en la derivada, lo que indica explícitamente que se está reemplazando la implementación heredada, no declarando un método nuevo sin relación.
+
+```csharp
+//Para explicar mejor el ejemplo, se han eliminado constructores y algunos parametros para que el código sea más simple de comprender.
+public class Animal
+{
+    public double Peso { get; set; }
+
+    public virtual void Comer()
+    {
+        Console.WriteLine($"Estoy comiendo. Ahora peso {Peso} Kg");
+    }
+}
+
+public class Ave : Animal
+{
+    public override void Comer()
+    {
+        Console.WriteLine($"Estoy comiendo semillas y pequeños insectos. Ahora peso {Peso} Kg");
+    }
+}
+```
+
+Esto logra el comportamiento siguiente:
+
+```csharp
+Animal criatura1 = new Animal { Peso = 2.0 };
+Ave criatura2 = new Ave { Peso = 3.0 };
+
+criatura1.Comer(); // "Estoy comiendo. Ahora peso 2 Kg"
+criatura2.Comer(); // "Estoy comiendo semillas y pequeños insectos. Ahora peso 3 Kg"
+```
+
+## Sobrescritura (*overriding*) de propiedades
+
+El mismo mecanismo aplica a propiedades, no solo a métodos — tiene sentido, dado que una propiedad no es más que un `get`/`set` con sintaxis particular (tema de Clases):
+
+```csharp
+public class Figura
+{
+    public virtual double Area => 0;
+}
+
+public class Circulo : Figura
+{
+    public double Radio { get; set; }
+
+    public override double Area => Math.PI * Radio * Radio;
+}
+```
+
+El resultado:
+
+```csharp
+Figura figura1 = new Figura();
+Circulo figura2 = new Circulo { Radio = 2 };
+
+Console.WriteLine(figura1.Area); // "0"
+Console.WriteLine(figura2.Area); // "12,566370614359172"
+```
+
+## Polimorfismo
+
+En las secciones anteriores se ha usado la palabra sin definirla del todo. **Polimorfismo** (del griego, "muchas formas") es la capacidad de tratar objetos de distintos tipos de forma uniforme, a través de un tipo común, dejando que sea cada objeto quien decida cómo responder.
+
+Imagina una granja con `Animal`, `Ave` y `Golondrina` — pero también, en el futuro, podría haber un `Mamifero` o un `Pez`. Cada uno come de forma distinta: un `Ave` come semillas e insectos, un `Pez` podría comer algas, un `Mamifero` podría pastar. Sin polimorfismo, cualquier código que quisiera "dar de comer a todos los animales de la granja" tendría que conocer de antemano cada tipo concreto que existe, y decidir a mano qué hacer con cada uno — algo como:
+
+```csharp
+foreach (object animal in listaDeAnimales)
+{
+    if (animal is Ave ave) ave.Comer();
+    else if (animal is Pez pez) pez.Comer();
+    else if (animal is Mamifero mamifero) mamifero.Comer();
+    // ...y así por cada tipo nuevo que se añada en el futuro
+}
+```
+
+Este código se rompe (o, más bien, se queda incompleto) cada vez que aparece un tipo nuevo de animal en la granja. Gracias al polimorfismo, con `Comer()` marcado `virtual` en `Animal` y con `override` en cada derivada, ese mismo recorrido se reduce a esto:
+
+```csharp
+foreach (Animal animal in listaDeAnimales)
+{
+    animal.Comer(); // cada uno ejecuta su propia versión, sin que este código sepa cuál es cuál
+}
+```
+
+Este código funciona igual de bien hoy, con `Animal`, `Ave` y `Golondrina`, que el día de mañana si se añade `Mamifero` o `Pez` — sin tocar ni una línea de este `foreach`. Cada objeto "sabe" cómo comer a su manera, y el código que los recorre no necesita enterarse de los detalles: solo necesita saber que, sea lo que sea, es un `Animal`, y por tanto puede comer.
+
+Esta es la promesa central del polimorfismo: escribir código contra el tipo base, y que siga funcionando correctamente sin cambios a medida que aparecen nuevas clases derivadas.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//SOBRA
+La parte que hace esto polimorfismo de verdad: **la versión que se ejecuta depende del tipo real del objeto, no del tipo de la variable usada para llamarlo**.
+
+```csharp
+Persona persona1 = new Persona { Nombre = "Ana" };
+Persona persona2 = new Empleado { Nombre = "Luis" }; // variable de tipo Persona, objeto real de tipo Empleado
+
+persona1.Saludar(); // "Hola, soy Ana."
+persona2.Saludar(); // "Hola, soy Luis y trabajo aquí." — se ejecuta el override, no la versión de Persona
+```
+
+Aunque `persona2` está declarada como `Persona`, el objeto al que apunta es realmente un `Empleado` — y es ese tipo real, no el de la variable, el que decide qué versión de `Saludar()` se ejecuta. Esto es lo que permite tratar una colección de `Persona` (una vez se vea `List<T>`, en el tema de colecciones) que en realidad contenga una mezcla de `Persona` y `Empleado`, y que cada uno salude a su manera sin que el código que los recorre necesite saber de qué tipo concreto es cada uno.
+//END SOBRA
+
+
+
+
+
+
+
+//Esto no tiene sentido sin explicar polimorfismo
+### Tipo de la variable frente a tipo real del objeto
+
+`virtual`/`override` es la excepción, no la regla: para todo lo demás, es el **tipo de la variable** el que decide qué se puede hacer con un objeto, sin que importe lo que el objeto en sí contenga realmente. Se ve claro con un miembro que **no** es un override de nada — uno que existe únicamente en la clase derivada:
+
+```csharp
+public class Empleado : Persona
+{
+    public string Empresa { get; set; }
+
+    public void MencionarEmpresa()
+    {
+        Console.WriteLine($"Trabajo en {Empresa}.");
+    }
+}
+```
+
+```csharp
+Persona persona = new Empleado { Nombre = "Luis", Empresa = "Acme" };
+
+persona.MencionarEmpresa(); // error de compilación: Persona no tiene MencionarEmpresa()
+```
+
+El objeto al que apunta `persona` es, en tiempo de ejecución, un `Empleado` completo — con su campo `Empresa` y su método `MencionarEmpresa()` intactos, nada de eso desaparece. Pero el compilador no decide qué se puede escribir mirando el objeto real (eso ni lo sabe todavía, solo existe al ejecutar el programa) — lo decide mirando el tipo de la variable, y `Persona` no declara `MencionarEmpresa()`. Da igual que el objeto detrás sí lo tenga: a través de una variable `Persona`, ese miembro no es alcanzable.
+
+Para llegar a él hace falta convertir explícitamente `persona` de vuelta a `Empleado`:
+
+```csharp
+Empleado empleado = (Empleado)persona;
+empleado.MencionarEmpresa(); // ahora sí
+```
+
+Esto se llama **downcasting**, y tiene más matices de los que este ejemplo deja ver (qué pasa si el objeto real no fuera un `Empleado`, por ejemplo) — se explica con detalle en la sección **Upcasting y downcasting**, más abajo en este mismo tema. De momento basta con quedarse con la idea de fondo: **qué objeto es realmente**, en el heap, no cambia nunca por cómo se declare una variable; pero **qué se puede hacer con él a través de esa variable concreta** lo decide el compilador, mirando únicamente su tipo declarado.
