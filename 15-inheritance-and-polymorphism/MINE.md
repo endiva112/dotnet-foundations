@@ -91,6 +91,12 @@ public class Ave : Animal
         Raza = raza;
     }
 
+    // Constructor con valores predeterminados
+    public Ave(string raza) : base(2, 1) 
+    {//TODAS las aves se crean con los valores 2Kg y 1 año de vida
+        Raza = raza;
+    }
+
     //métodos de Ave
     public void Volar()
     {
@@ -252,6 +258,85 @@ Console.WriteLine(figura1.Area); // "0"
 Console.WriteLine(figura2.Area); // "12,566370614359172"
 ```
 
+## Clases abstractas
+
+Una clase abstracta es aquella que no se puede instanciar directamente. Se usa únicamente como plantilla para que otras clases hereden de ella — por sí misma no representa un objeto con sentido propio.
+
+Un ejemplo de uso recomendado de clase abstracta es el ejemplo de antes, debido a que Figura posee una propiedad llamada Area, la cual el desarrollador ha inicializado a 0 únicamente para permitir que la clase compile.
+
+```csharp
+public abstract class Figura
+{
+    public abstract double Area { get; }
+}
+```
+
+Para declararlas, se hace uso de la palabra reservada `abstract`.
+
+Un miembro abstracto es todo aquel que no implementa nada, su único objetivo es el de declarar que toda clase derivada no abstracta está obligada a proporcionar un `override`. Si `Circulo` no implementara `Area`, no compilaría. 
+
+Una clase con al menos un miembro `abstract` debe ser ella misma `abstract`; no puede tener miembros sin implementación y a la vez pretender ser instanciable directamente.
+
+Una clase `abstract` sí puede tener miembros normales (no abstractos), con implementación completa, junto a los abstractos — no todo tiene que quedar pendiente de la derivada.
+
+Por ende, Circulo debería declararse así:
+
+```csharp
+public class Circulo : Figura
+{
+    public double Radio { get; set; }
+
+    public override double Area => Math.PI * Radio * Radio;
+}
+```
+
+### Constructores en una clase abstracta
+
+Aunque no se pueda instanciar con `new`, una clase `abstract` sí puede tener constructores. No se ejecutan nunca por sí solos, pero sí cuando una derivada los invoca con `base(...)`, exactamente igual que en cualquier otra jerarquía. Lo habitual es declararlos `protected` en vez de `public`, precisamente porque solo tiene sentido que los llame una derivada — ningún código externo puede crear un `Figura` directamente, así que un constructor `public` ahí sería engañoso:
+
+```csharp
+public abstract class Figura
+{
+    public string Nombre { get; set; }
+
+    protected Figura(string nombre)
+    {
+        Nombre = nombre;
+    }
+
+    public abstract double Area { get; }
+}
+
+public class Circulo : Figura
+{
+    public double Radio { get; set; }
+
+    //Todos los circulos usan "Círculo" como nombre de la Figura
+    public Circulo(double radio) : base("Círculo")
+    {
+        Radio = radio;
+    }
+
+    public override double Area => Math.PI * Radio * Radio;
+}
+```
+
+`Circulo` sigue sin poder omitir `base("Círculo")` si `Figura` no tiene un constructor vacío — la misma regla que ya se vio en Constructores en la jerarquía, sin ninguna excepción por el hecho de que `Figura` sea abstracta.
+
+Este es el resultado esperado:
+
+```csharp
+Figura figura = new Figura("Mi figura");  // error de compilación: no se puede instanciar una clase abstracta (además de protected)
+Circulo circulo = new Circulo(20); // esto sí, Circulo no es abstracta
+
+
+
+//Aunque también podemos hacer esto:
+Figura circulo2 = new Circulo(20);
+
+// esto es un upcast — para entender por qué es válido, hace falta ver antes el mecanismo que hay detrás: el polimorfismo.
+```
+
 ## Polimorfismo
 
 En las secciones anteriores se ha usado la palabra sin definirla del todo. **Polimorfismo** (del griego, "muchas formas") es la capacidad de tratar objetos de distintos tipos de forma uniforme, a través de un tipo común, dejando que sea cada objeto quien decida cómo responder.
@@ -294,19 +379,6 @@ Esta es la promesa central del polimorfismo: escribir código contra el tipo bas
 
 
 
-//SOBRA
-La parte que hace esto polimorfismo de verdad: **la versión que se ejecuta depende del tipo real del objeto, no del tipo de la variable usada para llamarlo**.
-
-```csharp
-Persona persona1 = new Persona { Nombre = "Ana" };
-Persona persona2 = new Empleado { Nombre = "Luis" }; // variable de tipo Persona, objeto real de tipo Empleado
-
-persona1.Saludar(); // "Hola, soy Ana."
-persona2.Saludar(); // "Hola, soy Luis y trabajo aquí." — se ejecuta el override, no la versión de Persona
-```
-
-Aunque `persona2` está declarada como `Persona`, el objeto al que apunta es realmente un `Empleado` — y es ese tipo real, no el de la variable, el que decide qué versión de `Saludar()` se ejecuta. Esto es lo que permite tratar una colección de `Persona` (una vez se vea `List<T>`, en el tema de colecciones) que en realidad contenga una mezcla de `Persona` y `Empleado`, y que cada uno salude a su manera sin que el código que los recorre necesite saber de qué tipo concreto es cada uno.
-//END SOBRA
 
 
 

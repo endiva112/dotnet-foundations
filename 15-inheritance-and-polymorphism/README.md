@@ -1,42 +1,5 @@
 
 
-## `virtual` y `override`
-
-Heredar un método tal cual, como `Saludar()` en el primer ejemplo, es útil pero limitado: ¿qué pasa si `Empleado` necesita saludar de forma distinta, mencionando su puesto? Podría declarar un método nuevo con otro nombre, pero eso rompe la idea de que ambos tipos "saben saludar" de forma intercambiable. La solución es permitir que la clase derivada **reemplace** la implementación heredada, conservando el mismo nombre:
-
-```csharp
-public class Persona
-{
-    public string Nombre { get; set; }
-
-    public virtual void Saludar()
-    {
-        Console.WriteLine($"Hola, soy {Nombre}.");
-    }
-}
-
-public class Empleado : Persona
-{
-    public override void Saludar()
-    {
-        Console.WriteLine($"Hola, soy {Nombre} y trabajo aquí.");
-    }
-}
-```
-
-`virtual` en la base marca el método como "reemplazable"; sin `virtual`, una clase derivada no puede darle una implementación propia con el mismo nombre y firma (el intento más cercano sin `virtual` es `new`, que se explica más abajo, y no es lo mismo). `override` en la derivada indica explícitamente que se está reemplazando esa implementación, no declarando un método nuevo sin relación.
-
-La parte que hace esto polimorfismo de verdad: **la versión que se ejecuta depende del tipo real del objeto, no del tipo de la variable usada para llamarlo**.
-
-```csharp
-Persona persona1 = new Persona { Nombre = "Ana" };
-Persona persona2 = new Empleado { Nombre = "Luis" }; // variable de tipo Persona, objeto real de tipo Empleado
-
-persona1.Saludar(); // "Hola, soy Ana."
-persona2.Saludar(); // "Hola, soy Luis y trabajo aquí." — se ejecuta el override, no la versión de Persona
-```
-
-Aunque `persona2` está declarada como `Persona`, el objeto al que apunta es realmente un `Empleado` — y es ese tipo real, no el de la variable, el que decide qué versión de `Saludar()` se ejecuta. Esto es lo que permite tratar una colección de `Persona` (una vez se vea `List<T>`, en el tema de colecciones) que en realidad contenga una mezcla de `Persona` y `Empleado`, y que cada uno salude a su manera sin que el código que los recorre necesite saber de qué tipo concreto es cada uno.
 
 ### Tipo de la variable frente a tipo real del objeto
 
@@ -71,55 +34,9 @@ empleado.MencionarEmpresa(); // ahora sí
 
 Esto se llama **downcasting**, y tiene más matices de los que este ejemplo deja ver (qué pasa si el objeto real no fuera un `Empleado`, por ejemplo) — se explica con detalle en la sección **Upcasting y downcasting**, más abajo en este mismo tema. De momento basta con quedarse con la idea de fondo: **qué objeto es realmente**, en el heap, no cambia nunca por cómo se declare una variable; pero **qué se puede hacer con él a través de esa variable concreta** lo decide el compilador, mirando únicamente su tipo declarado.
 
-### `virtual`/`override` en propiedades
 
-El mismo mecanismo aplica a propiedades, no solo a métodos — tiene sentido, dado que una propiedad no es más que un `get`/`set` con sintaxis particular (tema de Clases):
 
-```csharp
-public class Figura
-{
-    public virtual double Area => 0;
-}
 
-public class Circulo : Figura
-{
-    public double Radio { get; set; }
-
-    public override double Area => Math.PI * Radio * Radio;
-}
-```
-
-```csharp
-Figura figura = new Circulo { Radio = 2 };
-Console.WriteLine(figura.Area); // usa el override de Circulo, aunque la variable sea de tipo Figura
-```
-
-## `abstract`: clases que no se pueden instanciar
-
-El ejemplo de `Figura` de arriba deja ver un problema: `Figura.Area => 0` no representa el área de ninguna figura real — es un valor sin sentido propio, que solo existe para que algo compile. Cuando una clase base solo tiene sentido como plantilla para sus derivadas, y no como objeto por sí misma, se marca como `abstract`:
-
-```csharp
-public abstract class Figura
-{
-    public abstract double Area { get; }
-}
-
-public class Circulo : Figura
-{
-    public double Radio { get; set; }
-
-    public override double Area => Math.PI * Radio * Radio;
-}
-```
-
-```csharp
-Figura figura = new Figura();  // error de compilación: no se puede instanciar una clase abstracta
-Figura circulo = new Circulo(); // esto sí, Circulo no es abstracta
-```
-
-Un miembro `abstract` no tiene cuerpo — no implementa nada, solo declara que toda clase derivada no abstracta está obligada a proporcionar un `override`. Si `Circulo` no implementara `Area`, no compilaría. Una clase con al menos un miembro `abstract` debe ser ella misma `abstract`; no puede tener miembros sin implementación y a la vez pretender ser instanciable directamente.
-
-Una clase `abstract` sí puede tener miembros normales (no abstractos), con implementación completa, junto a los abstractos — no todo tiene que quedar pendiente de la derivada.
 
 ## `base.Metodo()`: extender en vez de reemplazar
 
@@ -152,6 +69,9 @@ new Empleado().Saludar();
 
 Esto es distinto de no hacer `override` en absoluto: aquí sí se reemplaza el método, pero la nueva implementación decide conservar y reutilizar la lógica original como parte de la suya, en vez de duplicarla escribiéndola de nuevo.
 
+
+
+
 ## `new` como ocultación de miembro
 
 Es posible declarar en una derivada un miembro con el mismo nombre que uno de la base **sin** `virtual`/`override`, usando `new`:
@@ -181,6 +101,11 @@ persona.Saludar(); // "Hola, soy una persona." — usa la versión de Persona, N
 
 A diferencia de `override`, aquí no hay polimorfismo: qué versión se ejecuta depende del tipo de la **variable**, no del tipo real del objeto — justo lo contrario de lo que se vio con `virtual`/`override`. `new` no reemplaza el método heredado, simplemente oculta su nombre cuando se accede a través del tipo derivado. Es un error común, sobre todo si se está acostumbrado a un lenguaje donde este matiz no existe: si la intención es polimorfismo, la combinación correcta es siempre `virtual` en la base y `override` en la derivada, nunca `new`.
 
+
+
+
+
+
 ## `sealed`
 
 `sealed` en una clase impide que se siga heredando de ella:
@@ -202,6 +127,10 @@ public override sealed void Saludar()
 ```
 
 Se usa cuando se quiere garantizar que un tipo o un comportamiento concreto queda fijado, sin posibilidad de modificarse más abajo en la cadena.
+
+
+
+
 
 ## La clase `object`
 
@@ -234,6 +163,10 @@ Console.WriteLine(persona); // "Persona: Ana"
 ```
 
 `object` también define `Equals(object)` y `GetHashCode()`, con el mismo patrón (`virtual` en la base, se puede hacer `override`). Su comportamiento por defecto compara identidad (si son el mismo objeto en memoria, no si tienen el mismo contenido) — igual que se vio con structs y `==` en el tema anterior. Hacer un `override` correcto de ambos exige mantenerlos consistentes entre sí, con reglas propias que no se profundizan todavía; se retoma en el tema de Records, donde se generan automáticamente y ese contexto aclara mejor por qué escribirlos a mano tiene matices delicados.
+
+
+
+
 
 ## Upcasting y downcasting
 
