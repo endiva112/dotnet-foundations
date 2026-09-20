@@ -1,61 +1,576 @@
+# 15 - Herencia y polimorfismo
+
+## Qué es la herencia
+
+Ya se ha trabajado con clases que no tienen ninguna relación entre sí (`Persona`, `CuentaBancaria`, `Contador`...). En muchos dominios, sin embargo, existen varios tipos que comparten datos y comportamientos, aunque cada uno tenga características propias.
+
+Por ejemplo, un `Ave` es un `Animal`. Ambos pueden compartir datos como `Peso` y `Edad`, además de comportamientos como `Comer()`. Sin embargo, un `Ave` puede tener características específicas que no tienen todos los animales, como `Raza` o el comportamiento `Volar()`.
+
+Sin herencia, habría que repetir `Peso`, `Edad` y `Comer()` en cada clase que represente un animal.
+
+En resumen, la **herencia** permite que una clase (la **derivada**) herede los miembros de otra (la **base**) y añada sus propias características y comportamientos.
+
+Este ejemplo de `Ave` y `Animal` se irá ampliando a medida que se expliquen los distintos conceptos:
+
+```csharp
+//Partimos de estas 2 clases, actualmente no hay relación entre ellas.
+public class Animal {}
+
+public class Ave {}
+```
+
+## Herencia simple
+
+La sintaxis para heredar una clase de otra es simple:
+
+```csharp
+public class Animal {}
+
+//Ave heredará los atributos y métodos de la clase Animal
+public class Ave : Animal
+{
+
+}
+```
+
+La sintaxis `class Derivada : Base` indica que `Derivada` **hereda de** `Base`. Es decir, lo que aparece después de `:` es la **clase base**:
+
+```csharp
+public class Ave : Animal {}
+```
+
+En este caso, `Ave` es la clase **derivada** y `Animal` es la clase **base**.
+
+A partir de este momento, `Ave` es un tipo de `Animal`: una instancia de `Ave` también puede utilizarse allí donde se espere un `Animal`. Profundizaremos sobre esta idea en breve cuando se hable del **polimorfismo**.
+
+C# solo permite que una clase tenga **una única clase base directa**:
+
+```csharp
+public class Ave : Animal, SerVivo {} // Error de compilación
+```
+
+Por tanto, una clase no puede heredar directamente de dos clases diferentes, cosa que sí se permite en otros lenguajes. Si un desarrollador desea que una clase cumpla varios contratos, C# permite hacerlo mediante el uso de **interfaces**, las cuales se explicarán en detalle en el tema de Interfaces.
+
+## Constructores en la jerarquía
+
+Se parte de una clase `Animal`, con los siguientes datos:
+
+```csharp
+public class Animal
+{
+    //propiedades de Animal
+    public double Peso { get; set; }
+    public int Edad { get; set; }
+
+    //constructor de Animal
+    public Animal(double peso, int edad)
+    {
+        Peso = peso;
+        Edad = edad;
+    }
+
+    //métodos de Animal
+    public void Comer()
+    {
+        Console.WriteLine($"Estoy comiendo. Ahora peso {Peso} Kg");
+    }
+}
+```
+
+Un constructor de la clase **derivada** no inicializa automáticamente los datos que pertenecen a la clase **base** — tiene que delegar explícitamente en un constructor de la base, con `base(...)`. Y, como con cualquier otra clase, nada impide que `Ave` tenga más de un constructor — por ejemplo, uno adicional con valores predeterminados:
+
+```csharp
+public class Ave : Animal
+{
+    //propiedades de Ave
+    public string Raza { get; set; }
+
+    //constructor de Ave, :base requerido!!!!
+    public Ave(double peso, int edad, string raza) : base(peso, edad)
+    {
+        Raza = raza;
+    }
+
+    // Constructor con valores predeterminados
+    public Ave(string raza) : base(2, 1)
+    {
+        //Todas las aves nacen con 2 Kg y 1 año de vida
+        Raza = raza;
+    }
+
+    //métodos de Ave
+    public void Volar()
+    {
+        Console.WriteLine($"Estoy volando!!!");
+    }
+}
+```
+
+Y la manera de instanciar a un Ave sería la siguiente:
+
+```csharp
+Ave miPajarito = new Ave(0.22, 2, "Golondrina");
+```
+
+`: base(peso, edad)` llama al constructor `Animal(double, int)` antes de ejecutar el cuerpo del constructor de `Ave` — la clase base siempre termina de construirse primero, y solo entonces se ejecuta lo propio de la derivada. Esto tiene sentido porque la derivada puede necesitar que los datos de la base ya existan antes de añadir los suyos.
+
+Si `Animal` no tuviera ningún constructor propio, `base()` sería opcional (C# lo asume implícitamente, llamando al constructor vacío por defecto). Pero en cuanto `Animal` define un constructor con parámetros, su constructor vacío por defecto deja de existir. Eso significa que `Ave` está obligado a llamar explícitamente a `base(peso, edad)`, o a algún otro constructor de `Animal` que exista; si no lo hace, no compila.
+
+## Herencia multinivel
+
+La cadena de herencia no se limita a un único nivel — una clase derivada puede a su vez ser la base de otra:
+
+```csharp
+public class Golondrina : Ave
+{
+    public int KilometrosVolados { get; set; }
+
+    public Golondrina(double peso, int edad, string raza, int kilometrosVolados)
+        : base(peso, edad, raza)
+    {
+        KilometrosVolados = kilometrosVolados;
+    }
+}
+```
+
+`base(...)` aquí llama al constructor de `Ave`, que a su vez llama al de `Animal` — la cadena se resuelve nivel a nivel, de la derivada más lejana hacia la base más raíz, cada una terminando de construirse antes de pasar a la siguiente. Los cuerpos de los constructores, sin embargo, se ejecutan en el orden contrario: primero el de `Animal`, luego el de `Ave`, y por último el de `Golondrina` — cada nivel confía en que todo lo que hereda ya está inicializado antes de añadir lo suyo.
+
+## Modificadores de acceso: `protected` e `internal`
+
+En el tema de Clases, se vieron los modificadores de acceso `public` y `private`. Ha de tenerse en cuenta que estos modificadores pueden aplicarse a cualquier tipo de miembro, tanto a **métodos** como a **campos** o **propiedades** (estos 2 son ligeramente distintos, leer tema de clases si cuesta distinguirlos).
+
+`public` → El miembro es accesible desde cualquier lugar, **incluso fuera del proyecto**.
+
+`private` → El miembro solo es accesible desde dentro de la clase que lo implementa.
+
+```csharp
+public class Animal
+{
+    public double Peso { get; protected set; } // cualquiera puede leerlo, solo Animal y sus derivadas pueden modificarlo
+
+    // Edad pasa a ser private aquí, únicamente para ilustrar este concepto
+    private int edad; // solo es modificable desde la clase Animal
+}
+
+public class Ave : Animal
+{
+    public void ModificarParametros(double nuevoPeso)
+    {
+        Peso = nuevoPeso; // funciona: el set es protected, y Ave hereda de Animal
+        Edad = 30; // error de compilación: Edad es private en Animal
+    }
+}
+```
+
+Un modificador delante de `get` o `set` restringe solo ese acceso concreto — el resto de la propiedad conserva la visibilidad que tenga declarada. Esto es una extensión directa de lo ya visto en Clases (`private set` para impedir cualquier asignación externa); aquí simplemente se cambia `private` por `protected`, permitiendo que las derivadas sí puedan asignar, aunque el resto del mundo no.
+
+```csharp
+Ave miPajarito = new Ave();
+Console.WriteLine(miPajarito.Peso); // funciona: el get es público
+miPajarito.Peso = 2.5; // error de compilación: el set es protected
+```
+
+Los nuevos modificadores son:
+
+`protected` → El miembro es accesible únicamente desde la clase que lo implementa y cualquiera de sus derivadas.
+
+`internal` → El miembro es accesible desde cualquier sección del proyecto, pero no desde otro proyecto que lo referencie como dependencia.
+
+```csharp
+internal class Configuracion
+{
+    // visible en todo este proyecto, invisible desde fuera de él
+}
+```
+
+En este momento del curso, las diferencias entre `internal` y `public` no son visibles, pero se volverá relevante en cuanto se llegue a trabajar con más de un proyecto (por ejemplo, una librería separada del programa que la consume), algo que se retoma en Proyectos .NET II. Existen además combinaciones de estos cuatro modificadores (`protected internal`, `private protected`), que se dejan fuera por la misma razón: su utilidad solo se aprecia con varios proyectos de por medio.
+
+Resumen de lo cubierto hasta ahora:
+
+| Modificador | Visible desde |
+|---|---|
+| `public` | Cualquier código, de cualquier proyecto |
+| `internal` | Cualquier código, dentro del mismo proyecto |
+| `protected` | La propia clase y sus derivadas, en cualquier proyecto |
+| `private` | Solo la propia clase |
+
+## Sobrescritura (*overriding*) de métodos
+
+Heredar un método tal cual, como `Comer()` en el primer ejemplo, es útil pero limitado: ¿qué pasa si `Animal` necesita expresar qué tipo de alimento concreto come? Se podría declarar un método nuevo con otro nombre, pero eso rompe la idea de que ambos tipos "saben comer" de forma intercambiable. La solución para este problema se conoce como **sobrescritura**; la cual permite que la clase derivada **reemplace** la implementación heredada, conservando el mismo nombre:
+
+Para ello C# hace uso de la palabra reservada `virtual`, la cual marca el método como "reemplazable" en la clase base. Y la palabra reservada  `override` en la derivada, lo que indica explícitamente que se está reemplazando la implementación heredada, no declarando un método nuevo sin relación.
+
+```csharp
+//Para explicar mejor el ejemplo, se han eliminado constructores y algunos parametros para que el código sea más simple de comprender.
+public class Animal
+{
+    public double Peso { get; set; }
+
+    public virtual void Comer()
+    {
+        Console.WriteLine($"Estoy comiendo. Ahora peso {Peso} Kg");
+    }
+}
+
+public class Ave : Animal
+{
+    public override void Comer()
+    {
+        Console.WriteLine($"Estoy comiendo semillas y pequeños insectos. Ahora peso {Peso} Kg");
+    }
+}
+```
+
+Esto logra el comportamiento siguiente:
+
+```csharp
+Animal criatura1 = new Animal { Peso = 2.0 };
+Ave criatura2 = new Ave { Peso = 3.0 };
+
+criatura1.Comer(); // "Estoy comiendo. Ahora peso 2 Kg"
+criatura2.Comer(); // "Estoy comiendo semillas y pequeños insectos. Ahora peso 3 Kg"
+```
+
+## Sobrescritura (*overriding*) de propiedades
+
+El mismo mecanismo aplica a propiedades, no solo a métodos — tiene sentido, dado que una propiedad no es más que un `get`/`set` con sintaxis particular (tema de Clases):
+
+```csharp
+public class Figura
+{
+    public virtual double Area => 0;
+}
+
+public class Circulo : Figura
+{
+    public double Radio { get; set; }
+
+    public override double Area => Math.PI * Radio * Radio;
+}
+```
+
+El resultado:
+
+```csharp
+Figura figura1 = new Figura();
+Circulo figura2 = new Circulo { Radio = 2 };
+
+Console.WriteLine(figura1.Area); // "0"
+Console.WriteLine(figura2.Area); // "12,566370614359172"
+```
+
+## `base.Metodo()`: extender en vez de reemplazar
+
+Un `override` no está obligado a descartar por completo la implementación de la base — puede invocarla explícitamente con `base.Metodo()` y añadir algo más alrededor:
+
+```csharp
+public class Animal
+{
+    public virtual void Comer()
+    {
+        Console.WriteLine("Estoy comiendo.");
+    }
+}
+
+public class Ave : Animal
+{
+    public override void Comer()
+    {
+        base.Comer(); // ejecuta la versión de Animal primero
+        Console.WriteLine("Como semillas y pequeños insectos.");
+    }
+}
+```
+
+```csharp
+new Ave().Comer();
+// Estoy comiendo.
+// Como semillas y pequeños insectos.
+```
+
+Esto es distinto de no hacer `override` en absoluto: aquí sí se reemplaza el método, pero la nueva implementación decide conservar y reutilizar la lógica original como parte de la suya, en vez de duplicarla escribiéndola de nuevo.
+
+## Clases abstractas
+
+Una clase abstracta es aquella que no se puede instanciar directamente. Se usa únicamente como plantilla para que otras clases hereden de ella — por sí misma no representa un objeto con sentido propio.
+
+Un ejemplo de uso recomendado de clase abstracta es el ejemplo de antes, debido a que `Figura` posee una propiedad llamada `Area`, la cual el desarrollador ha inicializado a 0 únicamente para permitir que la clase compile.
+
+```csharp
+public abstract class Figura
+{
+    public abstract double Area { get; }
+}
+```
+
+Para declararlas, se hace uso de la palabra reservada `abstract`.
+
+Un miembro abstracto es todo aquel que no implementa nada; su único objetivo es el de declarar que toda clase derivada no abstracta está obligada a proporcionar un `override`. Si `Circulo` no implementara `Area`, no compilaría. 
+
+Una clase con al menos un miembro `abstract` debe ser ella misma `abstract`; no puede tener miembros sin implementación y a la vez pretender ser instanciable directamente.
+
+Una clase `abstract` sí puede tener miembros normales (no abstractos), con implementación completa, junto a los abstractos — no todo tiene que quedar pendiente de la derivada.
+
+Por ende, `Circulo` debería declararse así:
+
+```csharp
+public class Circulo : Figura
+{
+    public double Radio { get; set; }
+
+    public override double Area => Math.PI * Radio * Radio;
+}
+```
+
+### Constructores en una clase abstracta
+
+Aunque no se pueda instanciar con `new`, una clase `abstract` sí puede tener constructores. No se ejecutan nunca por sí solos, pero sí cuando una derivada los invoca con `base(...)`, exactamente igual que en cualquier otra jerarquía. Lo habitual es declararlos `protected` en vez de `public`, precisamente porque solo tiene sentido que los llame una derivada — ningún código externo puede crear un `Figura` directamente, así que un constructor `public` ahí sería engañoso:
+
+```csharp
+public abstract class Figura
+{
+    public string Nombre { get; set; }
+
+    protected Figura(string nombre)
+    {
+        Nombre = nombre;
+    }
+
+    public abstract double Area { get; }
+}
+
+public class Circulo : Figura
+{
+    public double Radio { get; set; }
+
+    //Todos los círculos usan "Círculo" como nombre de la Figura
+    public Circulo(double radio) : base("Círculo")
+    {
+        Radio = radio;
+    }
+
+    public override double Area => Math.PI * Radio * Radio;
+}
+```
+
+`Circulo` sigue sin poder omitir `base("Círculo")` si `Figura` no tiene un constructor vacío — la misma regla que ya se vio en Constructores en la jerarquía, sin ninguna excepción por el hecho de que `Figura` sea abstracta.
+
+Este es el resultado esperado:
+
+```csharp
+Figura figura = new Figura("Mi figura");  // error de compilación: no se puede instanciar una clase abstracta (además de protected)
+Circulo circulo = new Circulo(20); // esto sí, Circulo no es abstracta
 
 
+//Aunque también podemos hacer esto:
+Figura circulo2 = new Circulo(20);
+
+// esto es un upcast — para entender por qué es válido, hace falta ver antes el mecanismo que hay detrás: el polimorfismo.
+```
+
+## Polimorfismo
+
+En las secciones anteriores se ha usado la palabra sin definirla del todo. **Polimorfismo** (del griego, "muchas formas") es la capacidad de tratar objetos de distintos tipos de forma uniforme, a través de un tipo común, dejando que sea cada objeto quien decida cómo responder.
+
+Imagina una granja con `Animal`, `Ave` y `Golondrina` — pero también, en el futuro, podría haber un `Mamifero` o un `Pez`. Cada uno come de forma distinta: un `Ave` come semillas e insectos, un `Pez` podría comer algas, un `Mamifero` podría pastar. Sin polimorfismo, cualquier código que quisiera "dar de comer a todos los animales de la granja" tendría que conocer de antemano cada tipo concreto que existe, y decidir a mano qué hacer con cada uno — algo como:
+
+```csharp
+//no es necesario entender este código de momento, se verá en detalle en el Pattern Matching II
+foreach (object animal in listaDeAnimales)
+{
+    if (animal is Ave ave) ave.Comer();
+    else if (animal is Pez pez) pez.Comer();
+    else if (animal is Mamifero mamifero) mamifero.Comer();
+    // ...y así por cada tipo nuevo que se añada en el futuro
+}
+```
+
+Este código se rompe (o, más bien, se queda incompleto) cada vez que aparece un tipo nuevo de animal en la granja. Gracias al polimorfismo, con `Comer()` marcado `virtual` en `Animal` y con `override` en cada derivada, ese mismo recorrido se reduce a esto:
+
+```csharp
+foreach (Animal animal in listaDeAnimales)
+{
+    animal.Comer(); // cada uno ejecuta su propia versión, sin que este código sepa cuál es cuál
+}
+```
+
+Este código funciona igual de bien hoy, con `Animal`, `Ave` y `Golondrina`, que el día de mañana si se añade `Mamifero` o `Pez` — sin tocar ni una línea de este `foreach`. Cada objeto "sabe" cómo comer a su manera, y el código que los recorre no necesita enterarse de los detalles: solo necesita saber que, sea lo que sea, es un `Animal`, y por tanto puede comer.
+
+Esta es la promesa central del polimorfismo: escribir código contra el tipo base, y que siga funcionando correctamente sin cambios a medida que aparecen nuevas clases derivadas.
+
+### Tipo de la variable frente a tipo real del objeto
+
+Retomando el ejemplo que se vio antes:
+
+```csharp
+Figura circulo = new Circulo(20);
+```
+
+Aquí nos encontramos con una variable de tipo `Figura` que **contiene** un objeto de tipo `Circulo`. Esto es posible debido a que un circulo es un tipo de `Figura` y el polimorfismo lo permite.
+
+Para comprenderlo, se retoma el ejemplo de `Ave`:
+
+```csharp
+//Ignoramos los constructores y propiedades, centremonos en el método Volar()
+public class Ave : Animal
+{
+    public string Raza { get; set; }
+
+    public void Volar()
+    {
+        Console.WriteLine($"Estoy volando!!!");
+    }
+}
+
+//esto compila
+Animal criatura = new Ave { Raza = "Paloma" };
+
+//esto no compila
+criatura.Volar(); // error de compilación: Animal no tiene Volar()
+```
+
+Esto se debe a que el objeto al que apunta `criatura` es, en tiempo de ejecución, un `Ave` completo — con su campo `Raza` y su método `Volar()` intactos, nada de eso desaparece. Pero el compilador no decide qué se puede escribir mirando el objeto real (eso ni lo sabe todavía, solo existe al ejecutar el programa) — lo decide mirando el tipo de la variable, y `Animal` no declara `Volar()`. Da igual que el objeto detrás sí lo tenga: a través de una variable de tipo `Animal`, ese miembro no es alcanzable.
+
+Para llegar a él hace falta convertir explícitamente `criatura` de vuelta a `Ave`:
+
+```csharp
+Ave unPajarito = (Ave)criatura;
+unPajarito.Volar(); // ahora sí
+```
+
+Esto se llama **downcasting**, y tiene más matices de los que este ejemplo deja ver (qué pasa si el objeto real no fuera un `Ave`, por ejemplo) — se explica con detalle en la sección **Upcasting y downcasting**, más abajo en este mismo tema. De momento basta con quedarse con la idea de fondo: **qué objeto es realmente**, en el heap, no cambia nunca por cómo se declare una variable; pero **qué se puede hacer con él a través de esa variable concreta** lo decide el compilador, mirando únicamente su tipo declarado.
+
+## Upcasting y downcasting
+
+En la sección anterior ya se usaron, sin nombrarlos, los dos movimientos que hay entre una clase base y una derivada.
+
+Convertir una `Ave` en `Animal` —lo que ya se hizo al escribir `Animal criatura = new Ave {...}`— se llama **upcasting**, y es automático: no hace falta ningún cast explícito.
+
+```csharp
+Ave ave = new Ave();
+Animal criatura = ave; // upcasting implícito, siempre seguro
+```
+
+Es seguro porque una `Ave` **es** un `Animal` — nunca puede fallar en tiempo de ejecución.
+
+El camino inverso —el que se usó para volver a alcanzar `Volar()`— se llama **downcasting**: un cast explícito que le dice al compilador "trata esto como lo que realmente es".
+
+```csharp
+Ave unPajarito = (Ave)criatura;
+unPajarito.Volar(); // ahora sí — unPajarito está declarada como Ave
+```
+
+A diferencia del upcasting, el downcasting no es automático ni está garantizado — puede fallar en tiempo de ejecución si el objeto real no es del tipo al que se intenta convertir:
+
+```csharp
+Animal criatura = new Animal(); // objeto real: Animal, no Ave
+Ave unPajarito = (Ave)criatura; // compila, pero lanza InvalidCastException en runtime
+```
+
+El compilador no puede saber, solo mirando el tipo de la variable (`Animal`), si el objeto al que apunta en tiempo de ejecución es realmente un `Ave` — eso solo se sabe al ejecutar. De ahí surge la necesidad de comprobar el tipo real antes de castear, algo que hasta aquí solo se puede hacer con `is` en su forma más básica (tema de Pattern Matching I) combinado con un cast:
+
+```csharp
+if (criatura is Ave)
+{
+    Ave unPajarito = (Ave)criatura;
+    // ...
+}
+```
+
+Esto funciona, pero es repetitivo — comprobar el tipo y luego castear por separado. Pattern Matching II, el tema siguiente, resuelve exactamente esta repetición con patrones de tipo (`is Ave unPajarito`, comprobación y cast en un solo paso) y patrones de propiedad, que solo tienen sentido real ahora que existe una jerarquía de clases sobre la que aplicarlos.
+
+## `new` como ocultación de miembro
+
+`new` es, en cierto modo, lo opuesto a `override`: permite declarar en la derivada un método con el mismo nombre que uno de la base, pero **sin** heredar el mecanismo de polimorfismo — sin `virtual` en la base ni `override` en la derivada.
+
+```csharp
+public class Animal
+{
+    public void Comer()
+    {
+        Console.WriteLine("Estoy comiendo.");
+    }
+}
+
+public class Ave : Animal
+{
+    public new void Comer()
+    {
+        Console.WriteLine("Estoy comiendo semillas.");
+    }
+}
+
+Animal criatura = new Ave();
+criatura.Comer(); // "Estoy comiendo." — se ejecuta la versión de Animal, no la de Ave
+```
+
+Aquí manda el tipo de la **variable** (`Animal`), no el tipo real del objeto (`Ave`) — justo lo contrario de lo que ocurre con `virtual`/`override`. `new` no reemplaza el método heredado, solo lo oculta cuando se accede a través del tipo derivado.
+
+Es un error fácil de cometer sin darse cuenta: si la intención es conseguir polimorfismo, la combinación correcta es siempre `virtual` en la base y `override` en la derivada — nunca `new`.
+
+En la práctica, `new` casi nunca se escribe a propósito desde cero — su caso de uso más habitual aparece cuando una clase base (sobre todo de una librería externa que no se controla) añade con el tiempo un método nuevo que, por casualidad, coincide en nombre con uno ya existente en la clase derivada, sin ninguna relación conceptual entre ambos. Sin `new`, el código compilaría igual, pero el compilador lanzaría una advertencia (`CS0108`) señalando esa coincidencia de nombres. `new` no cambia el comportamiento del programa — solo silencia esa advertencia, dejando constancia de que la ocultación es intencional y no un descuido.
 
 ## `sealed`
 
 `sealed` en una clase impide que se siga heredando de ella:
 
 ```csharp
-public sealed class Gerente : Empleado
+public sealed class Golondrina : Ave
 {
-    // ninguna clase puede heredar de Gerente
+    // ninguna clase puede heredar de Golondrina
 }
 ```
 
-También se puede aplicar a un método `override` concreto, para impedir que una subclase posterior lo vuelva a sobreescribir:
+También se puede aplicar a un método `override` concreto, para impedir que una subclase posterior lo vuelva a sobrescribir:
 
 ```csharp
-public override sealed void Saludar()
+public sealed override void Comer()
 {
-    // ninguna clase derivada de esta puede volver a hacer override de Saludar
+    // ninguna clase derivada de esta puede volver a hacer override de Comer
 }
 ```
 
 Se usa cuando se quiere garantizar que un tipo o un comportamiento concreto queda fijado, sin posibilidad de modificarse más abajo en la cadena.
-
-
-
-
 
 ## La clase `object`
 
 Toda clase en C#, aunque no lo declare explícitamente, hereda de `object` — es la raíz de la que parte cualquier jerarquía. Esto explica algo que ya se ha visto sin mencionarlo: `Console.WriteLine(objeto)` siempre puede imprimir algo, aunque sea una clase propia sin ningún código especial, porque `object` ya define un método `ToString()` que toda clase hereda.
 
 ```csharp
-public class Persona
+public class Animal
 {
     public string Nombre { get; set; }
 }
 
-Persona persona = new Persona { Nombre = "Ana" };
-Console.WriteLine(persona); // "Persona" — el nombre completo del tipo, no muy útil
+Animal animal = new Animal { Nombre = "Rex" };
+Console.WriteLine(animal); // "Animal" — el nombre completo del tipo, no muy útil
 ```
 
 La implementación por defecto de `ToString()` no es demasiado informativa — solo da el nombre del tipo. Como `ToString()` es `virtual` en `object`, se puede hacer `override` para dar una representación más útil:
 
 ```csharp
-public class Persona
+public class Animal
 {
     public string Nombre { get; set; }
 
     public override string ToString()
     {
-        return $"Persona: {Nombre}";
+        return $"Animal: {Nombre}";
     }
 }
 
-Console.WriteLine(persona); // "Persona: Ana"
+Console.WriteLine(animal); // "Animal: Rex"
 ```
 
-`object` también define `Equals(object)` y `GetHashCode()`, con el mismo patrón (`virtual` en la base, se puede hacer `override`). Su comportamiento por defecto compara identidad (si son el mismo objeto en memoria, no si tienen el mismo contenido) — igual que se vio con structs y `==` en el tema anterior. Hacer un `override` correcto de ambos exige mantenerlos consistentes entre sí, con reglas propias que no se profundizan todavía; se retoma en el tema de Records, donde se generan automáticamente y ese contexto aclara mejor por qué escribirlos a mano tiene matices delicados.
+`object` también define `Equals(object)` y `GetHashCode()`, siguiendo el mismo patrón. Su comportamiento por defecto compara identidad (si son el mismo objeto en memoria), no contenido — igual que se vio con structs y `==` en el tema anterior. Un `override` correcto de ambos exige mantenerlos consistentes entre sí, con reglas propias que se retoman en el tema de Records, donde se generan automáticamente.
 
+## Cuándo conviene usar herencia
+
+Podría ser tentador usar herencia en todo momento, pero la industria la recomienda cuando se cumplen todos los siguientes puntos:
+
+- La relación entre ambas clases es un "es un" real y **permanente** (`Circulo` **es** una `Figura`, siempre).
+- Las clases comparten datos o comportamiento que tiene sentido centralizar una sola vez en la base.
+- Te interesa el polimorfismo: código que trata distintas derivadas de forma uniforme a través del tipo base (una colección mixta, un parámetro de tipo base, etc.).
+- La relación no depende del tiempo o del contexto (no es un rol o estado que el objeto pueda ganar o perder).
+
+Si falla alguna de estas, probablemente convenga más la **composición**.
