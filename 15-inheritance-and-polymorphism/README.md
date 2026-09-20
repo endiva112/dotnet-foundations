@@ -38,36 +38,7 @@ Esto se llama **downcasting**, y tiene más matices de los que este ejemplo deja
 
 
 
-## `base.Metodo()`: extender en vez de reemplazar
 
-Un `override` no está obligado a descartar por completo la implementación de la base — puede invocarla explícitamente con `base.Metodo()` y añadir algo más alrededor:
-
-```csharp
-public class Persona
-{
-    public virtual void Saludar()
-    {
-        Console.WriteLine("Hola.");
-    }
-}
-
-public class Empleado : Persona
-{
-    public override void Saludar()
-    {
-        base.Saludar(); // ejecuta la versión de Persona primero
-        Console.WriteLine("Trabajo aquí.");
-    }
-}
-```
-
-```csharp
-new Empleado().Saludar();
-// Hola.
-// Trabajo aquí.
-```
-
-Esto es distinto de no hacer `override` en absoluto: aquí sí se reemplaza el método, pero la nueva implementación decide conservar y reutilizar la lógica original como parte de la suya, en vez de duplicarla escribiéndola de nuevo.
 
 
 

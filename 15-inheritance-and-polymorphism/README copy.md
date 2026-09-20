@@ -302,6 +302,10 @@ Esto se llama **downcasting**, y tiene más matices de los que este ejemplo deja
 
     `Circulo` sigue sin poder omitir `base("Círculo")` si `Figura` no tiene un constructor vacío — la misma regla que ya se vio en Constructores en la jerarquía, sin ninguna excepción por el hecho de que `Figura` sea abstracta.
 
+
+
+
+
 ## `base.Metodo()`: extender en vez de reemplazar
 
 Un `override` no está obligado a descartar por completo la implementación de la base — puede invocarla explícitamente con `base.Metodo()` y añadir algo más alrededor:
@@ -333,6 +337,11 @@ new Empleado().Saludar();
 
 Esto es distinto de no hacer `override` en absoluto: aquí sí se reemplaza el método, pero la nueva implementación decide conservar y reutilizar la lógica original como parte de la suya, en vez de duplicarla escribiéndola de nuevo.
 
+
+
+
+
+
 ## `new` como ocultación de miembro
 
 Es posible declarar en una derivada un miembro con el mismo nombre que uno de la base **sin** `virtual`/`override`, usando `new`:
@@ -361,6 +370,11 @@ persona.Saludar(); // "Hola, soy una persona." — usa la versión de Persona, N
 ```
 
 A diferencia de `override`, aquí no hay polimorfismo: qué versión se ejecuta depende del tipo de la **variable**, no del tipo real del objeto — justo lo contrario de lo que se vio con `virtual`/`override`. `new` no reemplaza el método heredado, simplemente oculta su nombre cuando se accede a través del tipo derivado. Es un error común, sobre todo si se está acostumbrado a un lenguaje donde este matiz no existe: si la intención es polimorfismo, la combinación correcta es siempre `virtual` en la base y `override` en la derivada, nunca `new`.
+
+
+
+
+
 
 ## `sealed`
 

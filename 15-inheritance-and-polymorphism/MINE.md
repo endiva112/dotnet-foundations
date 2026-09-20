@@ -258,6 +258,37 @@ Console.WriteLine(figura1.Area); // "0"
 Console.WriteLine(figura2.Area); // "12,566370614359172"
 ```
 
+### `base.Metodo()`: extender en vez de reemplazar
+
+Un `override` no está obligado a descartar por completo la implementación de la base — puede invocarla explícitamente con `base.Metodo()` y añadir algo más alrededor:
+
+```csharp
+public class Animal
+{
+    public virtual void Comer()
+    {
+        Console.WriteLine($"Estoy comiendo.");
+    }
+}
+
+public class Ave : Animal
+{
+    public override void Comer()
+    {
+        base.Comer(); // ejecuta la versión de Animal primero
+        Console.WriteLine("Como semillas y pequeños insectos.");
+    }
+}
+```
+
+```csharp
+new Ave().Comer();
+// Estoy comiendo.
+// Como semillas y pequeños insectos.
+```
+
+Esto es distinto de no hacer `override` en absoluto: aquí sí se reemplaza el método, pero la nueva implementación decide conservar y reutilizar la lógica original como parte de la suya, en vez de duplicarla escribiéndola de nuevo.
+
 ## Clases abstractas
 
 Una clase abstracta es aquella que no se puede instanciar directamente. Se usa únicamente como plantilla para que otras clases hereden de ella — por sí misma no representa un objeto con sentido propio.
@@ -330,7 +361,6 @@ Figura figura = new Figura("Mi figura");  // error de compilación: no se puede 
 Circulo circulo = new Circulo(20); // esto sí, Circulo no es abstracta
 
 
-
 //Aunque también podemos hacer esto:
 Figura circulo2 = new Circulo(20);
 
@@ -366,56 +396,44 @@ Este código funciona igual de bien hoy, con `Animal`, `Ave` y `Golondrina`, que
 
 Esta es la promesa central del polimorfismo: escribir código contra el tipo base, y que siga funcionando correctamente sin cambios a medida que aparecen nuevas clases derivadas.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//Esto no tiene sentido sin explicar polimorfismo
 ### Tipo de la variable frente a tipo real del objeto
 
-`virtual`/`override` es la excepción, no la regla: para todo lo demás, es el **tipo de la variable** el que decide qué se puede hacer con un objeto, sin que importe lo que el objeto en sí contenga realmente. Se ve claro con un miembro que **no** es un override de nada — uno que existe únicamente en la clase derivada:
+Retomando el ejemplo que se vio antes:
 
 ```csharp
-public class Empleado : Persona
-{
-    public string Empresa { get; set; }
+Figura circulo = new Circulo(20);
+```
 
-    public void MencionarEmpresa()
+Aquí nos encontramos con una variable de tipo `Figura` que **contiene** un objeto de tipo `Circulo`. Esto es posible debido a que un circulo es un tipo de `Figura` y el polimorfismo lo permite.
+
+Para poder comprenderlo volveremos a usar nuestro ejemplo de `Ave`:
+
+```csharp
+//Ignoramos los constructores y propiedades, centremonos en el método Volar()
+public class Ave : Animal
+{
+    public string Raza { get; set; }
+
+    public void Volar()
     {
-        Console.WriteLine($"Trabajo en {Empresa}.");
+        Console.WriteLine($"Estoy volando!!!");
     }
 }
+
+//esto compila
+Animal criatura = new Ave { Raza = "Paloma"};
+
+//esto no compila
+criatura.Volar(); // error de compilación: Animal no tiene Volar()
 ```
+
+Esto se debe a que el objeto al que apunta `criatura` es, en tiempo de ejecución, un `Ave` completo — con su campo `Raza` y su método `Volar()` intactos, nada de eso desaparece. Pero el compilador no decide qué se puede escribir mirando el objeto real (eso ni lo sabe todavía, solo existe al ejecutar el programa) — lo decide mirando el tipo de la variable, y `Animal` no declara `Volar()`. Da igual que el objeto detrás sí lo tenga: a través de una variable de tipo `Animal`, ese miembro no es alcanzable.
+
+Para llegar a él hace falta convertir explícitamente `criatura` de vuelta a `Ave`:
 
 ```csharp
-Persona persona = new Empleado { Nombre = "Luis", Empresa = "Acme" };
-
-persona.MencionarEmpresa(); // error de compilación: Persona no tiene MencionarEmpresa()
+Ave criatura = (Ave)criatura;
+criatura.Volar(); // ahora sí
 ```
 
-El objeto al que apunta `persona` es, en tiempo de ejecución, un `Empleado` completo — con su campo `Empresa` y su método `MencionarEmpresa()` intactos, nada de eso desaparece. Pero el compilador no decide qué se puede escribir mirando el objeto real (eso ni lo sabe todavía, solo existe al ejecutar el programa) — lo decide mirando el tipo de la variable, y `Persona` no declara `MencionarEmpresa()`. Da igual que el objeto detrás sí lo tenga: a través de una variable `Persona`, ese miembro no es alcanzable.
-
-Para llegar a él hace falta convertir explícitamente `persona` de vuelta a `Empleado`:
-
-```csharp
-Empleado empleado = (Empleado)persona;
-empleado.MencionarEmpresa(); // ahora sí
-```
-
-Esto se llama **downcasting**, y tiene más matices de los que este ejemplo deja ver (qué pasa si el objeto real no fuera un `Empleado`, por ejemplo) — se explica con detalle en la sección **Upcasting y downcasting**, más abajo en este mismo tema. De momento basta con quedarse con la idea de fondo: **qué objeto es realmente**, en el heap, no cambia nunca por cómo se declare una variable; pero **qué se puede hacer con él a través de esa variable concreta** lo decide el compilador, mirando únicamente su tipo declarado.
+Esto se llama **downcasting**, y tiene más matices de los que este ejemplo deja ver (qué pasa si el objeto real no fuera un `Ave`, por ejemplo) — se explica con detalle en la sección **Upcasting y downcasting**, más abajo en este mismo tema. De momento basta con quedarse con la idea de fondo: **qué objeto es realmente**, en el heap, no cambia nunca por cómo se declare una variable; pero **qué se puede hacer con él a través de esa variable concreta** lo decide el compilador, mirando únicamente su tipo declarado.
