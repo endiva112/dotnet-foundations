@@ -51,7 +51,7 @@ public class Ave : Animal, SerVivo {} // Error de compilación
 
 Por tanto, una clase no puede heredar directamente de dos clases diferentes, cosa que sí se permite en otros lenguajes. Si un desarrollador desea que una clase cumpla varios contratos, C# permite hacerlo mediante el uso de **interfaces**, las cuales se explicarán en detalle en el tema de Interfaces.
 
-## Constructores en la jerarquía
+### Constructores en la jerarquía
 
 Vamos a partir de una clase `Animal`, con los siguientes datos:
 
@@ -115,7 +115,7 @@ Ave miPajarito = new Ave(0.22, 2, "Golondrina");
 
 Si `Animal` no tuviera ningún constructor propio, `base()` sería opcional (C# lo asume implícitamente, llamando al constructor vacío por defecto). Pero en cuanto `Animal` define un constructor con parámetros, su constructor vacío por defecto deja de existir. Eso significa que `Ave` está obligado a llamar explícitamente a `base(peso, edad)`, o a algún otro constructor de `Animal` que exista; si no lo hace, no compila.
 
-### Herencia multinivel
+## Herencia multinivel
 
 La cadena de herencia no se limita a un único nivel — una clase derivada puede a su vez ser la base de otra:
 
@@ -421,7 +421,7 @@ public class Ave : Animal
 }
 
 //esto compila
-Animal criatura = new Ave { Raza = "Paloma"};
+Animal criatura = new Ave { Raza = "Paloma" };
 
 //esto no compila
 criatura.Volar(); // error de compilación: Animal no tiene Volar()
@@ -432,8 +432,78 @@ Esto se debe a que el objeto al que apunta `criatura` es, en tiempo de ejecució
 Para llegar a él hace falta convertir explícitamente `criatura` de vuelta a `Ave`:
 
 ```csharp
-Ave criatura = (Ave)criatura;
-criatura.Volar(); // ahora sí
+Ave unPajarito = (Ave)criatura;
+unPajarito.Volar(); // ahora sí
 ```
 
 Esto se llama **downcasting**, y tiene más matices de los que este ejemplo deja ver (qué pasa si el objeto real no fuera un `Ave`, por ejemplo) — se explica con detalle en la sección **Upcasting y downcasting**, más abajo en este mismo tema. De momento basta con quedarse con la idea de fondo: **qué objeto es realmente**, en el heap, no cambia nunca por cómo se declare una variable; pero **qué se puede hacer con él a través de esa variable concreta** lo decide el compilador, mirando únicamente su tipo declarado.
+
+## Upcasting y downcasting
+
+En la sección anterior ya se usaron, sin nombrarlos, los dos movimientos que hay entre una clase base y una derivada.
+
+Convertir una `Ave` en `Animal` —lo que ya se hizo al escribir `Animal criatura = new Ave {...}`— se llama **upcasting**, y es automático: no hace falta ningún cast explícito.
+
+```csharp
+Ave ave = new Ave();
+Animal criatura = ave; // upcasting implícito, siempre seguro
+```
+
+Es seguro porque una `Ave` **es** un `Animal` — nunca puede fallar en tiempo de ejecución.
+
+El camino inverso —el que se usó para volver a alcanzar `Volar()`— se llama **downcasting**: un cast explícito que le dice al compilador "trata esto como lo que realmente es".
+
+```csharp
+Ave unPajarito = (Ave)criatura;
+unPajarito.Volar(); // ahora sí — unPajarito está declarada como Ave
+```
+
+A diferencia del upcasting, el downcasting no es automático ni está garantizado — puede fallar en tiempo de ejecución si el objeto real no es del tipo al que se intenta convertir:
+
+```csharp
+Animal criatura = new Animal(); // objeto real: Animal, no Ave
+Ave unPajarito = (Ave)criatura; // compila, pero lanza InvalidCastException en runtime
+```
+
+El compilador no puede saber, solo mirando el tipo de la variable (`Animal`), si el objeto al que apunta en tiempo de ejecución es realmente un `Ave` — eso solo se sabe al ejecutar. De ahí surge la necesidad de comprobar el tipo real antes de castear, algo que hasta aquí solo se puede hacer con `is` en su forma más básica (tema de Pattern Matching I) combinado con un cast:
+
+```csharp
+if (criatura is Ave)
+{
+    Ave unPajarito = (Ave)criatura;
+    // ...
+}
+```
+
+Esto funciona, pero es repetitivo — comprobar el tipo y luego castear por separado. Pattern Matching II, el tema siguiente, resuelve exactamente esta repetición con patrones de tipo (`is Ave unPajarito`, comprobación y cast en un solo paso) y patrones de propiedad, que solo tienen sentido real ahora que existe una jerarquía de clases sobre la que aplicarlos.
+
+## `new` como ocultación de miembro
+
+`new` es, en cierto modo, lo opuesto a `override`: permite declarar en la derivada un método con el mismo nombre que uno de la base, pero **sin** heredar el mecanismo de polimorfismo — sin `virtual` en la base ni `override` en la derivada.
+
+```csharp
+public class Animal
+{
+    public void Comer()
+    {
+        Console.WriteLine("Estoy comiendo.");
+    }
+}
+
+public class Ave : Animal
+{
+    public new void Comer()
+    {
+        Console.WriteLine("Estoy comiendo semillas.");
+    }
+}
+
+Animal criatura = new Ave();
+criatura.Comer(); // "Estoy comiendo." — se ejecuta la versión de Animal, no la de Ave
+```
+
+Aquí manda el tipo de la **variable** (`Animal`), no el tipo real del objeto (`Ave`) — justo lo contrario de lo que ocurre con `virtual`/`override`. `new` no reemplaza el método heredado, solo lo oculta cuando se accede a través del tipo derivado.
+
+Es un error fácil de cometer sin darse cuenta: si la intención es conseguir polimorfismo, la combinación correcta es siempre `virtual` en la base y `override` en la derivada — nunca `new`.
+
+En la práctica, `new` casi nunca se escribe a propósito desde cero — su caso de uso más habitual aparece cuando una clase base (sobre todo de una librería externa que no se controla) añade con el tiempo un método nuevo que, por casualidad, coincide en nombre con uno ya existente en la clase derivada, sin ninguna relación conceptual entre ambos. Sin `new`, el código compilaría igual, pero el compilador lanzaría una advertencia (`CS0108`) señalando esa coincidencia de nombres. `new` no cambia el comportamiento del programa — solo silencia esa advertencia, dejando constancia de que la ocultación es intencional y no un descuido.
