@@ -32,14 +32,14 @@ Todo en consola. El objetivo es pensar en C# sin depender de un framework encima
 |---|---------|-----------|-------|
 | 00 | `00-general-dev-skills` | Git (branches, commits atómicos, .gitignore), CLI de `dotnet`, HTTP/HTTPS a nivel concepto (para más adelante) | 🟡 |
 | 01 | `01-types-and-variables` | Tipos de valor vs referencia, inferencia (`var`), constantes | 🟢 |
-| 01b | `01b-nullable-reference-types` | `?`, null-forgiving `!`, por qué importa desde ya (movido pronto a propósito) | 🟡 |
+| 01b | `01b-nullable-reference-types` | `?`, null-forgiving `!`, por qué importa desde ya (movido pronto a propósito) | 🟢 |
 | 02 | `02-control-flow` | `if/else`, `switch` clásico, operadores lógicos | 🟢 |
 | 02b | `02b-pattern-matching` | `switch` expressions, patrones (`is`, deconstrucción básica) | 🟡 |
 | 03 | `03-loops` | `while`, `do-while`, `for`, `foreach` — cuándo usar cada uno | 🟢 |
-| 04 | `04-methods` | Parámetros, sobrecarga, `ref`/`out`, valores por defecto | 🟡 |
-| 04b | `04b-enums-and-structs` | `enum` (útil para roles/estados de tu dominio), struct vs class |  |
+| 04 | `04-methods` | Parámetros, sobrecarga, `ref`/`out`, valores por defecto | 🟢 |
+| 04b | `04b-enums-and-structs` | `enum` (útil para roles/estados de tu dominio), struct vs class | 🟢 |
 | 05 | `05-collections` | `List<T>`, `Dictionary<K,V>`, `HashSet<T>`, arrays |  |
-| 06 | `06-classes` | Encapsulación, constructores, propiedades, `static` |  |
+| 06 | `06-classes` | Encapsulación, constructores, propiedades, `static` | 🟢 |
 | 06b | `06b-records` | Records, inmutabilidad, `with` — muy usado en DTOs de API |  |
 | 07 | `07-interfaces` | Contratos, inyección conceptual (antes de DI de verdad) |  |
 | 08 | `08-generics` | `List<T>` por dentro, constraints básicas |  |
