@@ -44,7 +44,7 @@ public class Portatil : Dispositivo
 {
     public double TamanioPantalla { get; set; }
 
-    public Portatil(string marca, decimal precio, double tamanioPantalla) : base (marca, precio)
+    public Portatil(string marca, decimal precio, double tamanioPantalla) : base(marca, precio)
     {
         TamanioPantalla = tamanioPantalla;
     }
@@ -59,7 +59,7 @@ public class Smartphone : Dispositivo
 {
     public int CapacidadAlmacenamiento { get; set; }
 
-    public Smartphone(string marca, decimal precio, int capacidadAlmacenamiento) : base (marca, precio)
+    public Smartphone(string marca, decimal precio, int capacidadAlmacenamiento) : base(marca, precio)
     {
         CapacidadAlmacenamiento = capacidadAlmacenamiento;
     }
@@ -85,7 +85,7 @@ public class SmartphoneGamer : Smartphone
     public int TasaRefresco { get; set; }
 
     public SmartphoneGamer(string marca, decimal precio, int capacidadAlmacenamiento, int tasaRefresco) 
-        : base (marca, precio, capacidadAlmacenamiento)
+        : base(marca, precio, capacidadAlmacenamiento)
     {
         TasaRefresco = tasaRefresco;
     }

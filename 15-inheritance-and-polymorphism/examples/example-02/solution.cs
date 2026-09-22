@@ -1,35 +1,106 @@
+Dispositivo[] dispositivos = 
+{
+    new Portatil("Asus 5", 500m, 140), 
+    new Portatil("Poco X3 Pro", 154.99m, 150), 
+    new Smartphone("Poco X5", 254.99m, 200), 
+    new Smartphone("Huawei 5", 350.99m, 250), 
+    new SmartphoneGamer("Huawei 7", 450.99m, 350, 300)
+};
 
+foreach (Dispositivo dispositivo in dispositivos)
+{
+    dispositivo.MostrarFicha();
+    dispositivo.Encender();
+    Console.WriteLine("- - -"); //Mejorar la lectura de la salida.
+}
 
+foreach (Dispositivo dispositivo in dispositivos)
+{
+    if (dispositivo is Smartphone)
+    {
+        Smartphone aux = (Smartphone)dispositivo;
+        aux.TomarFoto();
+    }        
+}
 
-/*
-# Ejercicio 2 — Inventario polimórfico
+//Compila, pero lanza una excepción en tiempo de ejecución, ya que el primer elemento del array es un Portatil y no un Smartphone.
+Smartphone intentoCasteo = (Smartphone)dispositivos[0]; // Este elemento es un Portatil
+//Unhandled exception. System.InvalidCastException: Unable to cast object of type 'Portatil' to type 'Smartphone'
 
-## Contexto
+#region  Clases del Ejercicio 1
+public abstract class Dispositivo
+{
+    public string Marca { get; protected set; }
+    public decimal Precio { get; set; } 
 
-Este ejercicio parte de las clases del Ejercicio 1 (`Dispositivo`, `Portatil`, `Smartphone`, `SmartphoneGamer`). La tienda quiere
- recorrer su inventario completo sin tener que preguntar, dispositivo a dispositivo, de qué tipo concreto es cada uno.
+    protected Dispositivo(string marca, decimal precio)
+    {
+        Marca = marca;
+        Precio = precio;
+    }
 
-## Requisitos
+    public abstract void Encender();
 
-1. Crea un array de tipo `Dispositivo[]` con al menos cinco elementos, mezclando instancias de `Portatil`, `Smartphone` y `SmartphoneGamer`
- (al menos una de cada tipo).
+    public void MostrarFicha()
+    {
+        Console.WriteLine($"Marca: {Marca} \nPrecio: {Precio} €");
+    }
+}
 
-2. Recorre el array con un único `foreach` y, para cada dispositivo, llama a `MostrarFicha()` y a `Encender()`. No debe haber ningún 
-`if`, `switch` ni comprobación de tipo dentro de este bucle — la llamada tiene que funcionar igual para los tres tipos, apoyándose
- únicamente en que `Encender()` es `virtual`/`override`. Si te ves tentado a comprobar el tipo aquí, es que algo no está bien planteado en el Ejercicio 1.
+public class Portatil : Dispositivo
+{
+    public double TamanioPantalla { get; set; }
 
-3. Después de ese recorrido, escribe un segundo bucle sobre el mismo array que haga lo siguiente: para cada dispositivo que 
-sea realmente un `Smartphone` (o un `SmartphoneGamer`, que también lo es), llama a `TomarFoto()`. Como `TomarFoto()` no 
-existe en `Dispositivo`, necesitarás comprobar el tipo con `is` y convertir explícitamente con un cast antes de poder llamarlo 
-— no uses todavía la forma abreviada `is Smartphone s` (patrón de tipo), eso se ve en el tema siguiente.
+    public Portatil(string marca, decimal precio, double tamanioPantalla) : base(marca, precio)
+    {
+        TamanioPantalla = tamanioPantalla;
+    }
 
-4. Añade al array un `Dispositivo` cualquiera (por ejemplo, un `Portatil`) e intenta, a propósito, convertirlo a `Smartphone`
- con un cast directo, sin comprobar antes con `is`. Ejecuta el programa y confirma que salta una excepción en tiempo de
-  ejecución — anota en un comentario qué tipo de excepción es y por qué ocurre. Después, comenta esa línea (o bórrala) para 
-  que el resto del programa pueda ejecutarse sin interrumpirse.
+    public override void Encender()
+    {
+        Console.WriteLine("Cargando Linux OS...");
+    }
+}
 
-## Para comprobar que funciona
+public class Smartphone : Dispositivo
+{
+    public int CapacidadAlmacenamiento { get; set; }
 
-El programa debe imprimir la ficha y el "encendido" de los cinco dispositivos sin ningún chequeo de tipo, y a continuación 
-solo las fotos de los que realmente son smartphones.
-*/
+    public Smartphone(string marca, decimal precio, int capacidadAlmacenamiento) : base(marca, precio)
+    {
+        CapacidadAlmacenamiento = capacidadAlmacenamiento;
+    }
+
+    public override void Encender()
+    {
+        Console.WriteLine("Lanzando Android OS, espere unos segundos...");
+    }
+
+    public void TomarFoto()
+    {
+        Console.WriteLine("Foto tomada y guardada en la galería!");
+    }
+
+    public override string ToString()
+    {
+        return $"Smartphone {Marca} ({CapacidadAlmacenamiento} GB)";
+    }
+}
+
+public class SmartphoneGamer : Smartphone
+{
+    public int TasaRefresco { get; set; }
+
+    public SmartphoneGamer(string marca, decimal precio, int capacidadAlmacenamiento, int tasaRefresco) 
+        : base(marca, precio, capacidadAlmacenamiento)
+    {
+        TasaRefresco = tasaRefresco;
+    }
+
+    public override void Encender()
+    {
+        base.Encender();
+        Console.WriteLine("Cargando GameSense, el acelerador de apps de videojuegos");
+    }
+}
+#endregion
