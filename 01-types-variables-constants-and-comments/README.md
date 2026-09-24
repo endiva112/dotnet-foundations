@@ -15,15 +15,7 @@ Una variable es un contenedor que almacena un valor. C# es fuertemente tipado, p
 | `char` | Un único carácter | `char inicial = 'A';` |
 | `string` | Cadena de texto | `string nombre = "Ana";` |
 
-`string` es un tipo por referencia (vive en el heap). El resto de la tabla son tipos por valor (viven en la pila/stack, se copian al asignarlos). Esto se nota más adelante: si copias un `int` a otra variable y cambias la copia, el original no cambia; con objetos (referencia), ambas variables apuntan a lo mismo. De momento basta con saber que existe esa diferencia.
-
----
-
-**Heap:** memoria donde viven los objetos (instancias de clases, strings, arrays...). No tiene un orden de liberación predecible: el recolector de basura (Garbage Collector) va limpiando lo que ya no tiene ninguna referencia apuntándolo. Acceder al heap es algo más lento que a la pila, porque implica seguir una referencia hasta encontrar el dato real.
-
-**Pila / Stack:** memoria donde viven los tipos por valor y las referencias en sí (no lo que apuntan). Funciona como una pila de platos: lo último en entrar es lo primero en salir. Cada vez que se llama a un método se apila un nuevo "marco" con sus variables locales, y se libera automáticamente en cuanto el método termina. Es muy rápida precisamente por este orden estricto.
-
----
+`string` es un tipo por referencia (vive en el heap). El resto de la tabla son tipos por valor (viven en la pila/stack, se copian al asignarlos). Esto se nota más adelante: si copias un `int` a otra variable y cambias la copia, el original no cambia; con objetos (referencia), ambas variables apuntan a lo mismo. De momento basta con saber que existe esa diferencia — se explica con detalle, memoria incluida, en un tema de refuerzo más adelante, una vez se hayan visto clases, structs y records, que es cuando el contraste se aprecia mejor con ejemplos reales delante.
 
 ## Inferencia con `var`
 
@@ -55,6 +47,18 @@ const double Pi = 3.14159;
 /// comentario de documentación (XML), se usa sobre métodos y clases.
 /// Se verá con más detalle cuando toque documentar APIs.
 ```
+
+También existen `#region` / `#endregion`, un par de directivas que no son comentarios en sentido estricto, pero cumplen un papel parecido: agrupan un bloque de código bajo un nombre, para poder plegarlo y desplegarlo en el editor.
+
+```csharp
+#region Validaciones
+
+// código de validación aquí
+
+#endregion
+```
+
+No afectan en nada a la compilación ni al comportamiento del programa — son una ayuda puramente visual del IDE para organizar archivos largos. Se usan con moderación: en un archivo pequeño no hacen falta, y depender de ellas para que un archivo se lea bien suele ser señal de que ese archivo debería dividirse en varios más pequeños, en vez de organizarse a base de regiones.
 
 ## Mostrar información por consola
 
