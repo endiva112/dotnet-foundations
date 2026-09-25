@@ -51,7 +51,16 @@ Con una clase, esto se comportaría completamente distinto — `copia` y `origin
 
 ## El "gotcha" de mutar un struct sin darse cuenta
 
-Esta diferencia tiene una consecuencia que sorprende la primera vez que se pisa. Ya se vio con arrays que la variable de un `foreach` es de solo lectura — con structs, la razón de fondo es la misma:
+Esta diferencia tiene una consecuencia que sorprende la primera vez que se pisa, y conviene precisarla bien porque es fácil malinterpretarla. Lo único que es de solo lectura en la variable de un `foreach` es la variable en sí — no se puede reasignar a otro objeto o valor, ni con una clase ni con un struct:
+
+```csharp
+foreach (Punto p in puntos)
+{
+    p = new Punto(0, 0); // error de compilación, tanto si Punto es struct como si fuera class
+}
+```
+
+La diferencia aparece al escribir en una propiedad, no al reasignar la variable entera — y ahí es donde struct y class se comportan de forma opuesta:
 
 ```csharp
 Punto[] puntos = new Punto[] { new Punto(1, 1), new Punto(2, 2) };
@@ -61,6 +70,24 @@ foreach (Punto p in puntos)
     p.X = 0; // error de compilación (CS1656)
 }
 ```
+
+Con una clase, la misma operación compila sin problema:
+
+```csharp
+public class Caja
+{
+    public int Valor { get; set; }
+}
+
+Caja[] cajas = new Caja[] { new Caja { Valor = 1 }, new Caja { Valor = 2 } };
+
+foreach (Caja c in cajas)
+{
+    c.Valor = 10; // esto sí compila, y además modifica el objeto real
+}
+```
+
+El motivo de fondo es el mismo de siempre (tipo por valor frente a tipo por referencia), pero aplicado con cuidado: `c` es una referencia — una dirección que apunta a un objeto en el heap. Escribir `c.Valor = 10` no toca esa dirección en absoluto, solo el contenido del objeto al que apunta; la variable `c` en sí no cambia. `p`, en cambio, cuando `Punto` es un struct, no es una dirección — es el valor completo, con `X` e `Y` viviendo físicamente dentro de la propia variable. Escribir `p.X = 0` sí es modificar la variable `p` misma, porque `X` es parte de su contenido, no algo aparte a lo que apunta. Y como la variable de un `foreach` es de solo lectura, el compilador lo bloquea.
 
 Más sutil todavía: modificar el resultado de una propiedad o un método que devuelve un struct no modifica nada real, porque lo que se obtiene es una **copia temporal**, no el original:
 
