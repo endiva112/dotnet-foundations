@@ -1,33 +1,12 @@
 
+Publicacion libro = new Libro("Cien Años de Soledad", 1967, "Gabriel García Márquez");
+Publicacion revista = new Revista("Cien Años de Soledad", 1967, 1);
 
-/*
-# Ejercicio 2 — Publicaciones y sus tipos
+Console.WriteLine(libro == revista); // Espero que devuelva false, porque aunque compartan el mismo Titulo y AnioPublicacion, son de tipos diferentes (Libro y Revista).
 
-## Contexto
+Libro copia = (Libro)libro with { AnioPublicacion = 1968 }; // Crea un nuevo libro con el mismo título y autor, pero con un año de publicación diferente.
+Console.WriteLine(libro == copia); //si el año hubiese sido 1967, el resultado seria True.
 
-Además de libros, la biblioteca también cataloga revistas. Ambos comparten algunos datos, pero son cosas distintas — 
-nadie confundiría un libro con una revista solo porque coincidan en título y año.
-
-## Requisitos
-
-1. Declara un tipo base `Publicacion` con `Titulo` (`string`) y `AnioPublicacion` (`int`), usando sintaxis posicional.
-
-2. Declara dos tipos que hereden de `Publicacion`:
-   - `Libro`, añadiendo `Autor` (`string`).
-   - `Revista`, añadiendo `NumeroEdicion` (`int`).
-
-   Ambos deben poder construirse pasando todos sus datos (los propios y los heredados) en una sola llamada.
-
-3. Crea un `Libro` y una `Revista` que compartan exactamente el mismo `Titulo` y el mismo `AnioPublicacion` (aunque cada uno 
-tenga, además, su propio dato adicional con cualquier valor). Sube ambos a una variable de tipo `Publicacion` y compáralos 
-entre sí. Antes de ejecutar, anota en un comentario qué esperas que devuelva la comparación, y por qué, teniendo en cuenta lo 
-que ya viste sobre igualdad en el tema anterior de Herencia.
-
-4. Crea un segundo `Libro`, distinto del primero solo en el año de publicación, obtenido a partir del primero sin volver a 
-escribir el título ni el autor.
-
-## Para comprobar que funciona
-
-La comparación del punto 3 debe confirmar tu hipótesis. Si no lo hace, revisa qué falta para que dos tipos de una misma jerarquía,
- aunque compartan valores en las propiedades heredadas, no se consideren iguales.
-*/
+record class Publicacion(string Titulo, int AnioPublicacion);
+record class Libro(string Titulo, int AnioPublicacion, string Autor) : Publicacion(Titulo, AnioPublicacion);
+record class Revista(string Titulo, int AnioPublicacion, int NumeroEdicion) : Publicacion(Titulo, AnioPublicacion);

@@ -10,10 +10,10 @@ La biblioteca quiere registrar la posición física de cada estantería en la sa
 
 2. Crea dos posiciones con los mismos valores y compruébalas con `==`. No hace falta que escribas nada adicional para que esto compile y funcione — si te encuentras necesitando `operator ==` a mano, revisa qué tipo declaraste en el punto 1.
 
-3. Crea un array de varias `Posicion` y recorre el array con un `foreach`, intentando modificar la `Fila` de cada elemento directamente dentro del bucle. Observa qué ocurre al compilar, y compáralo con lo que ya viste en Structs sobre la variable de un `foreach`.
+3. Crea un array de varias `Posicion` y recorre el array con un `foreach`, intentando modificar la `Fila` de cada elemento directamente dentro del bucle. Observa qué ocurre al compilar.
 
-4. Declara una segunda versión del mismo tipo, esta vez impidiendo que sus propiedades se puedan modificar después de construidas. Repite el punto 2 (la comparación con `==`) para confirmar que la igualdad se sigue comportando igual.
+4. La biblioteca decide que, una vez fijada, la posición de una estantería no debería poder cambiar por accidente. Declara un segundo tipo, con otro nombre (por ejemplo `PosicionFija`), con los mismos datos que `Posicion`, pero donde ninguna propiedad se pueda modificar después de construida. Repite el punto 2 con este nuevo tipo, para confirmar que la igualdad por valor se sigue comportando igual aunque ahora sea inmutable.
 
 ## Para comprobar que funciona
 
-El punto 3 debe dar un error de compilación con la primera versión de `Posicion`. Anota en un comentario, con tus propias palabras, por qué ese error ocurre con este tipo y no ocurriría con una `class` equivalente.
+El punto 3 debe dar un error de compilación. Anota en un comentario, con tus propias palabras, qué es exactamente `posicion` dentro de ese `foreach` cuando la colección es de un tipo por valor, y por qué esa misma restricción no existiría si `Posicion` fuera una `class`.
