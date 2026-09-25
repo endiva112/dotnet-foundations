@@ -56,7 +56,7 @@ Esta diferencia tiene una consecuencia que sorprende la primera vez que se pisa,
 ```csharp
 foreach (Punto p in puntos)
 {
-    p = new Punto(0, 0); // error de compilación, tanto si Punto es struct como si fuera class
+    p = new Punto(0, 0); // error de compilación (CS1656), tanto si Punto es struct como si fuera class
 }
 ```
 
@@ -67,7 +67,7 @@ Punto[] puntos = new Punto[] { new Punto(1, 1), new Punto(2, 2) };
 
 foreach (Punto p in puntos)
 {
-    p.X = 0; // error de compilación (CS1656)
+    p.X = 0; // error de compilación (CS1654)
 }
 ```
 
