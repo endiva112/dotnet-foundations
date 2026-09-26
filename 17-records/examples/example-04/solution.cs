@@ -28,4 +28,4 @@ Console.WriteLine(p01 == p02);
 
 record struct Posicion(int Fila, int Columna);// esto ha de declarase como record struct, porque es un tipo de valor, y queremos que se comporte como tal (igualdad por valor, etc).
 
-record class PosicionFija(int Fila, int Columna); //record (aka record class) siempre se declara con init por decfecto
+readonly record struct PosicionFija(int Fila, int Columna);
