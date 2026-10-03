@@ -8,4 +8,6 @@
 - interfaces                ← contraste "extender" vs "implementar", + nota de null object
 - generics
 - colecciones
-- stringbuilder   
+- stringbuilder
+
+Proximo: lambdas
