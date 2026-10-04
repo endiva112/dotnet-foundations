@@ -10,5 +10,4 @@
 - colecciones
 - stringbuilder
 
-#ignore
 Proximo: lambdas
